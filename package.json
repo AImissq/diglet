@@ -1,5 +1,5 @@
 {
-  "name": "lagomorph",
+  "name": "diglet",
   "version": "0.0.0",
   "description": "secure http tunnelling server and client",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gordonwritescode/lagomorph.git"
+    "url": "git+https://github.com/gordonwritescode/diglet.git"
   },
   "keywords": [
     "tunnel",
@@ -17,9 +17,9 @@
   "author": "Gordon Hall <gordon@gordonwritescode.com>",
   "license": "AGPL-3.0",
   "bugs": {
-    "url": "https://github.com/gordonwritescode/lagomorph/issues"
+    "url": "https://github.com/gordonwritescode/diglet/issues"
   },
-  "homepage": "https://github.com/gordonwritescode/lagomorph#readme",
+  "homepage": "https://github.com/gordonwritescode/diglet#readme",
   "devDependencies": {
     "chai": "^3.5.0",
     "mocha": "^2.4.5",
