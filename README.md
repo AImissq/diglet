@@ -1,7 +1,7 @@
 Diglet
 ======
 
-[![Build Status](https://img.shields.io/travis/bookchin/diglet.svg?style=flat-square)](https://travis-ci.org/Storj/diglet)
+[![Build Status](https://img.shields.io/travis/bookchin/diglet.svg?style=flat-square)](https://travis-ci.org/bookchin/diglet)
 [![Coverage Status](https://img.shields.io/coveralls/bookchin/diglet.svg?style=flat-square)](https://coveralls.io/r/bookchin/diglet)
 [![NPM](https://img.shields.io/npm/v/diglet.svg?style=flat-square)](https://www.npmjs.com/package/diglet)
 [![License](https://img.shields.io/badge/license-AGPL3.0-blue.svg?style=flat-square)](https://raw.githubusercontent.com/bookchin/diglet/master/LICENSE)
