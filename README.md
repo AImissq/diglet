@@ -9,6 +9,9 @@ Diglet
 Simple HTTP tunneling. Expose a local server behind NAT or firewall to the 
 internet. [Read the documentation here](http://bookch.in/diglet).
 
+> Diglet is basically just a [localtunnel](https://localtunnel.github.io/www/) 
+> bikeshed that aims to provide a more flexible programmatic interface.
+
 ```bash
 npm install -g diglet
 ```

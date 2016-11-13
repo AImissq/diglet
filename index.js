@@ -11,3 +11,6 @@ module.exports.Client = require('./lib/client');
 
 /** {@link BindingAgent} */
 module.exports.BindingAgent = require('./lib/binding-agent');
+
+/** {@link HeaderTransformer} */
+module.exports.HeaderTransformer = require('./lib/header-transformer');
