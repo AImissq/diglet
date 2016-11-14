@@ -9,6 +9,9 @@ module.exports.Tunnel = require('./lib/tunnel');
 /** {@link Client} */
 module.exports.Client = require('./lib/client');
 
+/** {@link Proxy} */
+module.exports.Proxy = require('./lib/proxy');
+
 /** {@link BindingAgent} */
 module.exports.BindingAgent = require('./lib/binding-agent');
 
