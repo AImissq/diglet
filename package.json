@@ -37,6 +37,10 @@
   },
   "dependencies": {
     "commander": "^2.9.0",
-    "readable-stream": "^2.2.1"
+    "on-finished": "^2.3.0",
+    "portastic": "^1.0.1",
+    "rc": "^1.1.6",
+    "readable-stream": "^2.2.1",
+    "tldjs": "^1.7.0"
   }
 }
