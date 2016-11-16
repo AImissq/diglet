@@ -22,7 +22,7 @@ const server = new diglet.Server({
 });
 
 function getProxyIdFromSubdomain(request) {
-  return tld.getSubdomain(request.url);
+  return tld.getSubdomain(request.headers.host);
 }
 
 http.createServer()
