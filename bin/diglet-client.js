@@ -11,7 +11,7 @@ function getTunnelUri(callback) {
   var request = http.request({
     host: config.client.remoteAddress,
     port: Number(config.client.remotePort),
-    path: '/?id=' + require('crypto').randomBytes(6).toString('hex'),
+    path: '/?id=' + config.client.requestProxyId,
     method: 'GET'
   }, (res) => {
     let body = '';

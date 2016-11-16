@@ -16,7 +16,9 @@ module.exports = require('rc')('diglet', {
     localAddress: 'localhost',
     localPort: 8080,
     remoteAddress: 'localhost',
-    remotePort: 9000
+    remotePort: 9000,
+    maxConnections: 10,
+    requestProxyId: require('crypto').randomBytes(6).toString('hex')
   }
 });
 
