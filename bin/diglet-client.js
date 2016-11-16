@@ -79,19 +79,21 @@ getTunnelUri((err, info) => {
     return console.error(err.message);
   }
 
-  establishTunnel(info.tunnelHost, info.tunnelPort, (err) => {
+  getMessageOfTheDay((err, motd) => {
     if (err) {
       return console.error(err.message);
     }
 
-    getMessageOfTheDay((err, motd) => {
+    console.info(motd);
+    console.info('');
+    console.info(`Your tunnel address is: ${info.publicUrl}`);
+    console.info('');
+
+    establishTunnel(info.tunnelHost, info.tunnelPort, (err) => {
       if (err) {
         return console.error(err.message);
       }
 
-      console.info(motd);
-      console.info('');
-      console.info(`Your tunnel address is: ${info.publicUrl}`);
     });
   });
 });
