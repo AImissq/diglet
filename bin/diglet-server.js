@@ -2,10 +2,6 @@
 
 'use strict';
 
-require('commander')
-  .option('--config <file>', 'See http://github.com/bookchin/diglet#config')
-  .parse(process.argv);
-
 const qs = require('querystring');
 const url = require('url');
 const http = require('http');
