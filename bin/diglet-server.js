@@ -8,6 +8,7 @@ const http = require('http');
 const diglet = require('..');
 const path = require('path');
 const motd = require('fs').readFileSync(path.join(__dirname, '../motd'));
+const tld = require('tldjs');
 
 const config = require('./_config');
 const server = new diglet.Server({
@@ -21,10 +22,7 @@ const server = new diglet.Server({
 });
 
 function getProxyIdFromSubdomain(request) {
-  var parsedUrl = url.parse('http://' + request.headers.host);
-  var domainParts = parsedUrl.host.split('.' + config.server.serverHost);
-  var proxyId = domainParts.length > 1 ? domainParts[0] : null;
-  return proxyId;
+  return tld.getSubdomain(request.url);
 }
 
 http.createServer()
