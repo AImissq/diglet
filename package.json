@@ -1,8 +1,11 @@
 {
   "name": "diglet",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "secure http tunnelling server and client",
   "main": "index.js",
+  "bin": {
+    "diglet": "bin/diglet.js"
+  },
   "scripts": {
     "test": "mocha",
     "linter": "jshint --config .jshintrc",
@@ -37,10 +40,8 @@
   },
   "dependencies": {
     "commander": "^2.9.0",
-    "on-finished": "^2.3.0",
     "portastic": "^1.0.1",
     "rc": "^1.1.6",
-    "readable-stream": "^2.2.1",
-    "tldjs": "^1.7.0"
+    "through": "^2.3.8"
   }
 }
