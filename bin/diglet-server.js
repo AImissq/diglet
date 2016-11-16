@@ -9,28 +9,20 @@ const diglet = require('..');
 const path = require('path');
 const motd = require('fs').readFileSync(path.join(__dirname, '../motd'));
 
-const config = require('rc')('diglet', {
-  serverHost: 'localhost',
-  serverPort: 8080,
-  proxyPortRange: {
-    min: 12000,
-    max: 12023
-  },
-  maxProxiesAllowed: 24,
-  proxyMaxConnections: 10,
-  proxyIdleTimeout: 5000
-});
-
+const config = require('./_config');
 const server = new diglet.Server({
-  proxyPortRange: config.proxyPortRange,
-  maxProxiesAllowed: config.maxProxiesAllowed,
-  proxyMaxConnections: config.proxyMaxConnections,
-  proxyIdleTimeout: config.proxyIdleTimeout
+  proxyPortRange: {
+    min: Number(config.server.proxyPortRange.min),
+    max: Number(config.server.proxyPortRange.max)
+  },
+  maxProxiesAllowed: Number(config.server.maxProxiesAllowed),
+  proxyMaxConnections: Number(config.server.proxyMaxConnections),
+  proxyIdleTimeout: Number(config.server.proxyIdleTimeout)
 });
 
 function getProxyIdFromSubdomain(request) {
   var parsedUrl = url.parse('http://' + request.headers.host);
-  var domainParts = parsedUrl.host.split('.' + config.serverHost);
+  var domainParts = parsedUrl.host.split('.' + config.server.serverHost);
   var proxyId = domainParts.length > 1 ? domainParts[0] : null;
   return proxyId;
 }
@@ -63,12 +55,22 @@ http.createServer()
           return;
         }
 
+        let publicUrl = [
+          'http://',
+          proxy.getProxyId(),
+          '.',
+          config.server.serverHost,
+          ':',
+          config.server.serverPort
+        ];
+
         response.writeHead(201, {
           'Content-Type': 'application/json'
         });
         response.end(JSON.stringify({
-          id: proxy.getProxyId(),
-          port: proxy.getProxyPort()
+          publicUrl: publicUrl.join(''),
+          tunnelPort: proxy.getProxyPort(),
+          tunnelHost: config.server.serverHost
         }));
       })
     }
@@ -93,6 +95,6 @@ http.createServer()
 
     socket.destroy();
   })
-  .listen(config.serverPort, function() {
-    console.info('diglet server running on port %s', config.serverPort);
+  .listen(Number(config.server.serverPort), function() {
+    console.info('diglet server running on port %s', config.server.serverPort);
   });
