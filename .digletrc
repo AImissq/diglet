@@ -1,9 +1,9 @@
 ; Configuration for running a remote diglet server
 
 [server]
-  serverHost = localhost
-  serverPort = 9000
-  proxyMaxConnections = 10
+  serverHost = diglet.me
+  serverPort = 80
+  proxyMaxConnections = 12
   maxProxiesAllowed = 24
   proxyIdleTimeout = 5000
 
@@ -16,6 +16,6 @@
 [client]
   localAddress = localhost
   localPort = 8080
-  remoteAddress = localhost
-  remotePort = 9000
-  maxConnections = 10
+  remoteAddress = diglet.me
+  remotePort = 80
+  maxConnections = 12

@@ -65,10 +65,10 @@ function establishTunnel(rHost, rPort, callback) {
 }
 
 var serverUri = [
-  'http://'
+  'http://',
   config.client.remoteAddress,
   ':',
-  config.config.remotePort
+  config.client.remotePort
 ].join('');
 
 console.info(
