@@ -10,7 +10,7 @@ const port = process.argv[2];
 const uri = `http://${client.remoteAddress}:${client.remotePort}`;
 
 function getTunnelUri(callback) {
-  console.info(`establishing tunnel with: ${serverUri}...`);
+  console.info(`establishing tunnel with: ${uri}...`);
 
   const request = http.request({
     host: config.client.remoteAddress,
@@ -23,10 +23,10 @@ function getTunnelUri(callback) {
     function handleEnd() {
       body = JSON.parse(body);
       if (res.statusCode !== 201) {
-        return callback(new Error(body.error));
+        return console.error(err.message);
       }
-      callback(info);
-      console.info(`your tunnel address is: ${info.publicUrl}`);
+      callback(body);
+      console.info(`your tunnel address is: ${body.publicUrl}`);
     }
 
     res.on('data', (data) => body += data.toString());
