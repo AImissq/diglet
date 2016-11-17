@@ -8,9 +8,11 @@ const http = require('http');
 const diglet = require('..');
 const path = require('path');
 const tld = require('tldjs');
+const bunyan = require('bunyan');
 
 const config = require('./diglet-config');
 const server = new diglet.Server({
+  logger: bunyan.createLogger({ name: 'diglet-server' }),
   proxyPortRange: {
     min: Number(config.server.proxyPortRange.min),
     max: Number(config.server.proxyPortRange.max)

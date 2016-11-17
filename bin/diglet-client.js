@@ -3,14 +3,16 @@
 'use strict';
 
 const http = require('http');
+const bunyan = require('bunyan');
 const diglet = require('..');
 const config = require('./diglet-config');
 const client = config.client;
 const port = process.argv[2];
 const uri = `http://${client.remoteAddress}:${client.remotePort}`;
+const logger = bunyan.createLogger({ name: 'diglet-client' });
 
 function getTunnelUri(callback) {
-  console.info(`establishing tunnel with: ${uri}...`);
+  logger.info(`Establishing tunnel with: ${uri}...`);
 
   const request = http.request({
     host: config.client.remoteAddress,
@@ -23,17 +25,17 @@ function getTunnelUri(callback) {
     function handleEnd() {
       body = JSON.parse(body);
       if (res.statusCode !== 201) {
-        return console.error(err.message);
+        return logger.error(body.error);
       }
       callback(body);
-      console.info(`your tunnel address is: ${body.publicUrl}`);
+      logger.info(`Your tunnel address is: ${body.publicUrl}`);
     }
 
     res.on('data', (data) => body += data.toString());
     res.on('end', handleEnd);
   });
 
-  request.on('error', (err) => console.error(err.message)).end();
+  request.on('error', (err) => logger.error(err.message)).end();
 }
 
 function establishTunnel(rHost, rPort, callback) {
@@ -42,7 +44,8 @@ function establishTunnel(rHost, rPort, callback) {
     localPort: port ? Number(port) : Number(config.client.localPort),
     remoteAddress: rHost,
     remotePort: rPort,
-    maxConnections: Number(config.client.maxConnections)
+    maxConnections: Number(config.client.maxConnections),
+    logger: logger
   });
 
   tunnel.open();

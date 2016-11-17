@@ -39,6 +39,7 @@
     "sinon": "^1.17.6"
   },
   "dependencies": {
+    "bunyan": "^1.8.5",
     "colors": "^1.1.2",
     "commander": "^2.9.0",
     "portastic": "^1.0.1",
