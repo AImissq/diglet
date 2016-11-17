@@ -7,10 +7,9 @@ const url = require('url');
 const http = require('http');
 const diglet = require('..');
 const path = require('path');
-const motd = require('fs').readFileSync(path.join(__dirname, '../motd'));
 const tld = require('tldjs');
 
-const config = require('./_config');
+const config = require('./diglet-config');
 const server = new diglet.Server({
   proxyPortRange: {
     min: Number(config.server.proxyPortRange.min),
@@ -20,79 +19,84 @@ const server = new diglet.Server({
   proxyMaxConnections: Number(config.server.proxyMaxConnections),
   proxyIdleTimeout: Number(config.server.proxyIdleTimeout)
 });
+const serveStatic = require('serve-static')(
+  path.join(__dirname, '../static')
+);
 
 function getProxyIdFromSubdomain(request) {
   return tld.getSubdomain(request.headers.host);
 }
 
-http.createServer()
-  .on('request', function(request, response) {
-    console.info('received request: %s', request.url);
+function getPublicUrlForProxy(proxy) {
+  return [
+    'http://',
+    proxy.getProxyId(),
+    '.',
+    config.server.serverHost,
+    ':',
+    config.server.serverPort
+  ].join('');
+}
 
-    let proxyId = getProxyIdFromSubdomain(request);
+function isNewProxyRequest(request) {
+  let parsedUrl = url.parse(request.url);
+  let queryParams = parsedUrl.query ? qs.parse(parsedUrl.query) : null
 
-    if (proxyId) {
-      return server.routeHttpRequest(
-        proxyId,
-        request,
-        response,
-        (result) => console.info('routed request to proxy? %s', result)
-      );
+  return [
+    !!(queryParams && queryParams.id),
+    queryParams ? queryParams.id : null
+  ];
+}
+
+function createProxyById(requestedId, response) {
+  server.addProxy(requestedId, function(err, proxy) {
+    if (err) {
+      response.writeHead(400, {
+        'Content-Type': 'application/json'
+      });
+      response.end(JSON.stringify({ error: err.message }));
+      return;
     }
 
-    let parsedUrl = url.parse(request.url);
-    let queryParams = parsedUrl.query ? qs.parse(parsedUrl.query) : null
-
-    if (queryParams && queryParams.id) {
-      return server.addProxy(queryParams.id, function(err, proxy) {
-        if (err) {
-          response.writeHead(400, {
-            'Content-Type': 'application/json'
-          });
-          response.end(JSON.stringify({ error: err.message }));
-          return;
-        }
-
-        let publicUrl = [
-          'http://',
-          proxy.getProxyId(),
-          '.',
-          config.server.serverHost,
-          ':',
-          config.server.serverPort
-        ];
-
-        response.writeHead(201, {
-          'Content-Type': 'application/json'
-        });
-        response.end(JSON.stringify({
-          publicUrl: publicUrl.join(''),
-          tunnelPort: proxy.getProxyPort(),
-          tunnelHost: config.server.serverHost
-        }));
-      })
-    }
-
-    response.writeHead(200, {
-      'Content-Type': 'text/plain'
+    response.writeHead(201, {
+      'Content-Type': 'application/json'
     });
-    response.end(motd);
+    response.end(JSON.stringify({
+      publicUrl: getPublicUrlForProxy(proxy),
+      tunnelPort: proxy.getProxyPort(),
+      tunnelHost: config.server.serverHost
+    }));
   })
-  .on('upgrade', function(request, socket) {
-    console.info('received upgrade: %s', request.url);
+}
 
-    let proxyId = getProxyIdFromSubdomain(request);
+function handleServerRequest(request, response) {
+  let proxyId = getProxyIdFromSubdomain(request);
+  let [isProxyRequest, requestedId] = isNewProxyRequest(request);
 
-    if (proxyId) {
-      return server.routeWebSocketConnection(
-        proxyId,
-        request,
-        socket
-      );
-    }
+  if (proxyId) {
+    server.routeHttpRequest(proxyId, request, response, () => null);
+  } else if (isProxyRequest) {
+    createProxyById(requestedId, response);
+  } else {
+    serveStatic(request, response, () => response.end());
+  }
+}
 
-    socket.destroy();
-  })
-  .listen(Number(config.server.serverPort), function() {
-    console.info('diglet server running on port %s', config.server.serverPort);
-  });
+function handleServerUpgrade(request, socket) {
+  let proxyId = getProxyIdFromSubdomain(request);
+
+  if (!proxyId) {
+    return socket.destroy();
+  }
+
+  server.routeWebSocketConnection(proxyId, request, socket);
+}
+
+const webServer = http.createServer();
+
+webServer.on('request', handleServerRequest)
+webServer.on('upgrade', handleServerUpgrade)
+
+webServer.listen(Number(config.server.serverPort), function() {
+  console.info('diglet server running on port %s', config.server.serverPort);
+});

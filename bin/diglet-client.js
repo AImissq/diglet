@@ -4,11 +4,15 @@
 
 const http = require('http');
 const diglet = require('..');
-const config = require('./_config');
+const config = require('./diglet-config');
+const client = config.client;
 const port = process.argv[2];
+const uri = `http://${client.remoteAddress}:${client.remotePort}`;
 
 function getTunnelUri(callback) {
-  var request = http.request({
+  console.info(`establishing tunnel with: ${serverUri}...`);
+
+  const request = http.request({
     host: config.client.remoteAddress,
     port: Number(config.client.remotePort),
     path: '/?id=' + config.client.requestProxyId,
@@ -21,32 +25,12 @@ function getTunnelUri(callback) {
       if (res.statusCode !== 201) {
         return callback(new Error(body.error));
       }
-      callback(null, body);
+      callback(info);
+      console.info(`your tunnel address is: ${info.publicUrl}`);
     }
 
     res.on('data', (data) => body += data.toString());
     res.on('end', handleEnd);
-  });
-
-  request.on('error', callback).end();
-}
-
-function getMessageOfTheDay(callback) {
-  var request = http.request({
-    host: config.client.remoteAddress,
-    port: Number(config.client.remotePort)
-  }, function(res) {
-    if (res.statusCode !== 200) {
-      return callback(new Error(
-        `Failed to get MOTD.
-         Is ${config.client.remoteAddress} a valid diglet server?`
-      ));
-    }
-
-    let motd = '';
-
-    res.on('data', (data) => motd += data);
-    res.on('end', () => callback(null, motd));
   });
 
   request.on('error', (err) => console.error(err.message)).end();
@@ -61,39 +45,7 @@ function establishTunnel(rHost, rPort, callback) {
     maxConnections: Number(config.client.maxConnections)
   });
 
-  tunnel.once('established', () => callback()).open();
+  tunnel.open();
 }
 
-var serverUri = [
-  'http://',
-  config.client.remoteAddress,
-  ':',
-  config.client.remotePort
-].join('');
-
-console.info(
-  `Establishing tunnel with: ${serverUri}...`
-);
-getTunnelUri((err, info) => {
-  if (err) {
-    return console.error(err.message);
-  }
-
-  getMessageOfTheDay((err, motd) => {
-    if (err) {
-      return console.error(err.message);
-    }
-
-    console.info(motd);
-    console.info('');
-    console.info(`Your tunnel address is: ${info.publicUrl}`);
-    console.info('');
-
-    establishTunnel(info.tunnelHost, info.tunnelPort, (err) => {
-      if (err) {
-        return console.error(err.message);
-      }
-
-    });
-  });
-});
+getTunnelUri((info) => establishTunnel(info.tunnelHost, info.tunnelPort));
