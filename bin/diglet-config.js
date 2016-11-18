@@ -12,15 +12,15 @@ const config = require('rc')('diglet', {
       max: 12023
     },
     maxProxiesAllowed: 24,
-    proxyMaxConnections: 10,
+    proxyMaxConnections: 12,
     proxyIdleTimeout: 5000
   },
   client: {
     localAddress: 'localhost',
     localPort: 8080,
-    remoteAddress: 'localhost',
-    remotePort: 9000,
-    maxConnections: 10,
+    remoteAddress: 'diglet.me',
+    remotePort: 80,
+    maxConnections: 12,
     requestProxyId: require('crypto').randomBytes(6).toString('hex')
   }
 });
