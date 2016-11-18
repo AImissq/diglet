@@ -2,6 +2,7 @@
 
 'use strict';
 
+const colors = require('colors/safe');
 const http = require('http');
 const bunyan = require('bunyan');
 const diglet = require('..');
@@ -12,8 +13,6 @@ const uri = `http://${client.remoteAddress}:${client.remotePort}`;
 const logger = bunyan.createLogger({ name: 'diglet-client' });
 
 function getTunnelUri(callback) {
-  logger.info(`Establishing tunnel with: ${uri}...`);
-
   const request = http.request({
     host: config.client.remoteAddress,
     port: Number(config.client.remotePort),
@@ -27,8 +26,9 @@ function getTunnelUri(callback) {
       if (res.statusCode !== 201) {
         return logger.error(body.error);
       }
+      console.info(colors.bold('tunnel address ='), body.publicUrl);
+      console.info('');
       callback(body);
-      logger.info(`Your tunnel address is: ${body.publicUrl}`);
     }
 
     res.on('data', (data) => body += data.toString());
