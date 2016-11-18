@@ -1,5 +1,5 @@
-Diglet
-======
+![Diglet](https://raw.githubusercontent.com/bookchin/diglet/master/static/diglet.png)
+========
 
 [![Build Status](https://img.shields.io/travis/bookchin/diglet.svg?style=flat-square)](https://travis-ci.org/bookchin/diglet)
 [![Coverage Status](https://img.shields.io/coveralls/bookchin/diglet.svg?style=flat-square)](https://coveralls.io/r/bookchin/diglet)
