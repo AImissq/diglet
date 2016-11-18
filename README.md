@@ -107,9 +107,10 @@ few components:
 
 ### `diglet.Server`
 
-The server component is used to manage a collection of proxies. It is not a 
-traditional server in that it does not need to be bound to a port itself, so 
-it can be used simply as a management interface within your own server.
+The server component is used to manage a collection of `diglet.Proxy` 
+instances. It is not a traditional server in that it does not need to be bound 
+to a port itself, so it can be used simply as a management interface within 
+your own server.
 
 You create a `diglet.Server` with some options dictating how it should open 
 client tunnels and expose them to the world, then your application may choose 
