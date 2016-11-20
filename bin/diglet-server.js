@@ -92,7 +92,7 @@ function handleServerUpgrade(request, socket) {
     return socket.destroy();
   }
 
-  server.routeWebSocketConnection(proxyId, request, socket);
+  server.routeWebSocketConnection(proxyId, request, socket, () => null);
 }
 
 const webServer = http.createServer();
