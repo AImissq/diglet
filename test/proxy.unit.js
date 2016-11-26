@@ -153,6 +153,37 @@ describe('Proxy', function() {
         done();
       });
     });
+
+    it('should get another socket if destroyed', function(done) {
+      const proxy = new Proxy({ idleTimeout: 10 });
+      const _socket1 = { destroyed: true };
+      const _socket2 = { destroyed: false };
+      const _close = sinon.stub(proxy._server, 'close', () => {
+        proxy._server.emit('close')
+      });
+      proxy._connectedSockets = [_socket1, _socket2];
+      proxy.getSocket((socket, addBackToPool) => {
+        expect(socket).to.equal(_socket2);
+        addBackToPool();
+        expect(proxy._connectedSockets).to.have.lengthOf(1);
+        done();
+      });
+    });
+
+    it('should cleanup if all sockets are destroyed', function(done) {
+      const proxy = new Proxy({ idleTimeout: 10 });
+      const _socket1 = { destroyed: true };
+      const _socket2 = { destroyed: true };
+      const _close = sinon.stub(proxy._server, 'close', () => {
+        proxy._server.emit('close')
+      });
+      proxy._connectedSockets = [_socket1, _socket2];
+      proxy.getSocket((socket, addBackToPool) => {
+        expect(socket).to.equal(null);
+        expect(proxy._connectedSockets).to.have.lengthOf(0);
+        done();
+      });
+    });
   });
 
   describe('#_processNextWaitingHandler', function() {
