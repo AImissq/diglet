@@ -165,7 +165,7 @@ describe('Tunnel', function() {
       });
       tunnel._createRemoteConnection();
       expect(connect.called).to.equal(true);
-      expect(socket.setKeepAlive.called).to.equal(true);
+      expect(socket.setKeepAlive.called).to.equal(false);
       expect(socket.setNoDelay.called).to.equal(true);
     });
 
@@ -431,6 +431,7 @@ describe('Tunnel', function() {
     function createFakeSocket() {
       let sock = new EventEmitter();
       sock.end = sinon.stub();
+      sock.destroy = sinon.stub();
       return sock;
     }
 
@@ -444,9 +445,10 @@ describe('Tunnel', function() {
       });
       tunnel._handleRemoteError(remote, new Error());
       expect(remote.end.called).to.equal(true);
+      expect(remote.destroy.called).to.equal(true);
     });
 
-    it('should end the connection', function(done) {
+    it('should end the connection and emit error', function(done) {
       const remote = createFakeSocket();
       const tunnel = new Tunnel({
         remoteAddress: '0.0.0.0',
@@ -459,6 +461,7 @@ describe('Tunnel', function() {
       tunnel.on('error', () => done())
       tunnel._handleRemoteError(remote, error);
       expect(remote.end.called).to.equal(true);
+      expect(remote.destroy.called).to.equal(true);
     });
 
   });
