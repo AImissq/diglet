@@ -20,7 +20,8 @@ const server = new diglet.Server({
   },
   maxProxiesAllowed: Number(config.server.maxProxiesAllowed),
   proxyMaxConnections: Number(config.server.proxyMaxConnections),
-  proxyIdleTimeout: Number(config.server.proxyIdleTimeout)
+  proxyIdleTimeout: Number(config.server.proxyIdleTimeout),
+  proxySocketTimeout: Number(config.server.proxySocketTimeout)
 });
 const serveStatic = require('serve-static')(
   path.join(__dirname, '../static')

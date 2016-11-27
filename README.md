@@ -69,6 +69,8 @@ A `.digletrc` file may contain any of the following:
   maxProxiesAllowed = 24
   ; Time to wait for client to connect before destroying proxy
   proxyIdleTimeout = 5000
+  ; time to wait before assuming a proxied socket is dead
+  proxySocketTimeout = 2000
 
 [server.proxyPortRange]
   ; Starting port for opening client proxies

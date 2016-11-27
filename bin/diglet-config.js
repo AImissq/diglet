@@ -13,7 +13,8 @@ const config = require('rc')('diglet', {
     },
     maxProxiesAllowed: 24,
     proxyMaxConnections: 12,
-    proxyIdleTimeout: 5000
+    proxyIdleTimeout: 5000,
+    proxySocketTimeout: 2000
   },
   client: {
     localAddress: 'localhost',
