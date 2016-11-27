@@ -51,7 +51,7 @@ function establishTunnel(rHost, rPort, callback) {
   // TODO - debug - remove me
   setInterval(() => {
     logger.info('there are %s tunnel connections open?', tunnel._tunnelsOpened)
-  });
+  }, 1000);
 
   tunnel.open();
 }
