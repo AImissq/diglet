@@ -267,13 +267,12 @@ describe('Tunnel', function() {
         tunnel,
         '_createRemoteConnection'
       );
-      const _open = sinon.stub(tunnel, 'open');
       const remoteSock = createFakeSocket();
       tunnel._createLocalConnection(remoteSock);
       remoteSock.emit('close');
       setImmediate(() => {
         expect(socket.end.called).to.equal(true);
-        expect(_open.called).to.equal(true);
+        expect(_createRemoteConnection.called).to.equal(true);
         done();
       });
     });
