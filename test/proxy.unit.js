@@ -231,6 +231,7 @@ describe('Proxy', function() {
     it('should handle socket close', function(done) {
       const proxy = new Proxy();
       const sock = new EventEmitter();
+      sock.setTimeout = sinon.stub();
       const _handleSocketClose = sinon.stub(
         proxy,
         '_handleSocketClose'
@@ -256,6 +257,7 @@ describe('Proxy', function() {
     it('should handle socket error', function(done) {
       const proxy = new Proxy();
       const sock = new EventEmitter();
+      sock.setTimeout = sinon.stub();
       const _handleSocketError = sinon.stub(
         proxy,
         '_handleSocketError'
