@@ -16,7 +16,6 @@ describe('Proxy', function() {
       expect(proxy._opts.proxyPort).to.equal(0);
       expect(typeof proxy._opts.proxyId).to.equal('string');
       expect(proxy._opts.idleTimeout).to.equal(5000);
-      expect(proxy._logger).to.equal(console);
     });
 
     it('should use the supplied options', function() {

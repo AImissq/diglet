@@ -165,7 +165,7 @@ describe('Tunnel', function() {
       });
       tunnel._createRemoteConnection();
       expect(connect.called).to.equal(true);
-      expect(socket.setKeepAlive.called).to.equal(false);
+      expect(socket.setKeepAlive.called).to.equal(true);
       expect(socket.setNoDelay.called).to.equal(true);
     });
 
