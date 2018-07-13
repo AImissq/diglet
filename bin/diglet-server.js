@@ -2,6 +2,7 @@
 
 'use strict';
 
+const async = require('async');
 const http = require('http');
 const diglet = require('..');
 const path = require('path');
@@ -86,4 +87,15 @@ server.listen(parseInt(config.TunnelPort), function() {
   console.log(
     `   Your Diglet tunnel is running on port ${config.TunnelPort}`
   );
+});
+
+// NB: We do a heartbeat every minute
+async.eachLimit([...server._proxies], 6, ([id, proxy], done) => {
+  const url = `http://${id}.${config.Hostname}:${config.ProxyPort}`;
+
+  logger.info('sending heartbeat to %s (%s)', id, url);
+  http.get(url, (res) => {
+    res.resume();
+    done();
+  });
 });
