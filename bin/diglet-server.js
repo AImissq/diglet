@@ -7,12 +7,21 @@ const diglet = require('..');
 const path = require('path');
 const tld = require('tldjs');
 const bunyan = require('bunyan');
-const logger = bunyan.createLogger({ name: 'diglet-server' });
 const config = require('./_config');
-const server = new diglet.Server({ logger });
 const serveStatic = require('serve-static')(
   path.join(__dirname, '../static')
 );
+const program = require('commander');
+
+program
+  .option('-d, --debug', 'show verbose logs')
+  .parse(process.argv);
+
+const logger = bunyan.createLogger({
+  name: 'diglet-server',
+  level: program.debug ? 'info' : 'error'
+});
+const server = new diglet.Server({ logger });
 
 function getProxyIdFromSubdomain(request) {
   let subdomain = tld.getSubdomain(request.headers.host);
@@ -56,9 +65,25 @@ const proxy = http.createServer();
 proxy.on('request', handleServerRequest)
 proxy.on('upgrade', handleServerUpgrade)
 
+console.info(`
+
+   ____  _     _     _
+  |    \\|_|___| |___| |_
+  |  |  | | . | | -_|  _|
+  |____/|_|_  |_|___|_|
+          |___|
+
+   Copyright (c) 2018, Gordon Hall
+   Licensed under the GNU Affero General Public License Version 3
+`);
+
 proxy.listen(parseInt(config.ProxyPort), function() {
-  logger.info('diglet proxy running on port %s', config.ProxyPort);
+  console.log(
+    `   Your Diglet proxy is running on port ${config.ProxyPort}`
+  );
 });
 server.listen(parseInt(config.TunnelPort), function() {
-  logger.info('diglet tunnel running on port %s', config.TunnelPort);
+  console.log(
+    `   Your Diglet tunnel is running on port ${config.TunnelPort}`
+  );
 });
