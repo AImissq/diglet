@@ -3,11 +3,11 @@
 'use strict';
 
 const program = require('commander');
-const rc = require('rc');
 
 program
   .version(require('../package').version)
-  .command('client', 'establish a diglet tunnel', { isDefault: true })
-  .command('server', 'start a diglet tunnel server')
-  .command('config', 'prints the current configuration')
+  .command('tunnel <port>', 'establish a diglet tunnel')
+  .command('server', 'start a diglet tunnel server', {
+    isDefault: true
+  })
   .parse(process.argv);

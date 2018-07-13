@@ -1,21 +1,19 @@
 {
   "name": "diglet",
-  "version": "1.0.6",
-  "description": "secure http tunnelling server and client",
+  "version": "2.0.0",
+  "description": "a reverse http tunnel",
   "main": "index.js",
   "bin": {
     "diglet": "bin/diglet.js"
   },
   "scripts": {
-    "test": "mocha",
-    "linter": "jshint --config .jshintrc",
-    "coverage": "istanbul cover _mocha",
-    "build-docs": "mkdir -p ./jsdoc && rm -r ./jsdoc && jsdoc lib -r -R README.md -c .jsdoc.json --verbose -d ./jsdoc",
-    "deploy-docs": "gh-pages -d jsdoc --repo git@github.com:bookchin/diglet.git"
+    "test": "mocha --exit",
+    "linter": "eslint index.js lib test",
+    "coverage": "istanbul cover _mocha -- --exit"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bookchin/diglet.git"
+    "url": "git+https://gitlab.com/bookchin/diglet.git"
   },
   "keywords": [
     "tunnel",
@@ -24,30 +22,25 @@
   "author": "Gordon Hall <gordon@gordonwritescode.com>",
   "license": "AGPL-3.0",
   "bugs": {
-    "url": "https://github.com/bookchin/diglet/issues"
+    "url": "https://gitlab.com/bookchin/diglet/issues"
   },
-  "homepage": "https://github.com/bookchin/diglet#readme",
+  "homepage": "https://gitlab.com/bookchin/diglet#readme",
   "devDependencies": {
     "chai": "^3.5.0",
-    "coveralls": "^2.11.15",
-    "gh-pages": "^0.11.0",
-    "ink-docstrap": "boshevski/docstrap",
+    "eslint": "^5.1.0",
     "istanbul": "^0.4.5",
-    "jsdoc": "^3.4.3",
-    "jshint": "^2.9.4",
-    "mocha": "^2.5.3",
+    "mocha": "^5.2.0",
     "proxyquire": "^1.7.10",
     "sinon": "^1.17.6",
     "ws": "^1.1.1"
   },
   "dependencies": {
     "bunyan": "^1.8.5",
-    "colors": "^1.1.2",
     "commander": "^2.9.0",
-    "portastic": "^1.0.1",
+    "merge": "^1.2.0",
     "rc": "^1.1.6",
+    "secp256k1": "^3.5.0",
     "serve-static": "^1.11.1",
-    "through": "^2.3.8",
     "tldjs": "^1.7.0"
   }
 }
