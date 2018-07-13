@@ -6,7 +6,7 @@ const program = require('commander');
 
 program
   .version(require('../package').version)
-  .command('tunnel <port>', 'establish a diglet tunnel')
+  .command('tunnel', 'establish a diglet tunnel')
   .command('server', 'start a diglet tunnel server', {
     isDefault: true
   })
