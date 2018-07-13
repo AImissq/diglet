@@ -45,5 +45,5 @@ const tunnel = new diglet.Tunnel({
 });
 
 tunnel.open().once('established', function() {
-  console.info(`\n\tReverse Tunnel Established: ${tunnel.url}`);
+//  console.info(`\n\tReverse Tunnel Established: ${tunnel.url}`);
 });
