@@ -22,7 +22,10 @@ const logger = bunyan.createLogger({
   name: 'diglet-server',
   level: program.debug ? 'info' : 'error'
 });
-const server = new diglet.Server({ logger });
+const whitelist = config.Whitelist && config.Whitelist.length
+  ? config.Whitelist
+  : false;
+const server = new diglet.Server({ logger, whitelist });
 
 function getProxyIdFromSubdomain(request) {
   let subdomain = tld.getSubdomain(request.headers.host);
