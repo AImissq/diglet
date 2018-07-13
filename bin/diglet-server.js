@@ -98,6 +98,6 @@ setInterval(() => {
     http.get(url, (res) => {
       res.resume();
       done();
-    });
+    }).on('error', () => null);
   });
 }, 60000);
