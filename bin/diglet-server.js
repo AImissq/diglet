@@ -16,7 +16,7 @@ const serveStatic = require('serve-static')(
 
 function getProxyIdFromSubdomain(request) {
   let subdomain = tld.getSubdomain(request.headers.host);
-  let parts = subdomain.split('.');
+  let parts = subdomain ? subdomain.split('.') : [];
 
   if (request.headers.host === config.Hostname) {
     return '';
