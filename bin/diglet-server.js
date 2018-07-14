@@ -2,6 +2,7 @@
 
 'use strict';
 
+const fs = require('fs');
 const async = require('async');
 const https = require('http');
 const diglet = require('..');
