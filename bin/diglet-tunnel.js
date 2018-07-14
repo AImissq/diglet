@@ -11,13 +11,32 @@ const fs = require('fs');
 const { randomBytes } = require('crypto');
 const secp256k1 = require('secp256k1');
 const program = require('commander');
+const DEFAULT_KEY_PATH = path.join(os.homedir(), '.diglet.prv');
 
+
+program
+  .option('--port <port>', 'local port to reverse tunnel', 8080)
+  .option('--save [path]', 'save the generated key')
+  .option('--load [path]', 'load the saved key')
+  .option('--debug', 'show verbose logs')
+  .parse(process.argv);
+
+if (program.save && program.load) {
+  console.error('\n  error: cannot use `--save` and `--load` together');
+  process.exit(1);
+}
+
+if (program.save && typeof program.save !== 'string') {
+  program.save = DEFAULT_KEY_PATH;
+}
+
+if (program.load && typeof program.load !== 'string') {
+  program.load = DEFAULT_KEY_PATH;
+}
 
 function getPrivateKey() {
-  const keypath = path.join(os.homedir(), '.diglet.key');
-
-  if (fs.existsSync(keypath)) {
-    return fs.readFileSync(keypath);
+  if (program.load) {
+    return fs.readFileSync(program.load);
   }
 
   let key = Buffer.from([]);
@@ -26,14 +45,12 @@ function getPrivateKey() {
     key = randomBytes(32);
   }
 
-  fs.writeFileSync(keypath, key);
+  if (program.save) {
+    fs.writeFileSync(program.save, key);
+  }
+
   return key;
 }
-
-program
-  .option('-p, --port <port>', 'local port to reverse tunnel', 8080)
-  .option('-d, --debug', 'show verbose logs')
-  .parse(process.argv);
 
 const logger = bunyan.createLogger({ name: 'diglet-client', level: program.debug ? 'info' : 'error' });
 const tunnel = new diglet.Tunnel({

@@ -1,193 +1,138 @@
 ![Diglet](https://raw.githubusercontent.com/bookchin/diglet/master/static/diglet.png)
 ========
 
-[![Build Status](https://img.shields.io/travis/bookchin/diglet.svg?style=flat-square)](https://travis-ci.org/bookchin/diglet)
-[![Coverage Status](https://img.shields.io/coveralls/bookchin/diglet.svg?style=flat-square)](https://coveralls.io/r/bookchin/diglet)
 [![NPM](https://img.shields.io/npm/v/diglet.svg?style=flat-square)](https://www.npmjs.com/package/diglet)
-[![License](https://img.shields.io/badge/license-AGPL3.0-blue.svg?style=flat-square)](https://raw.githubusercontent.com/bookchin/diglet/master/LICENSE)
+[![License](https://img.shields.io/badge/license-AGPL3.0-blue.svg?style=flat-square)](https://gitlab.com/bookchin/diglet/raw/master/LICENSE)
 
-Simple HTTP tunneling. Expose a local server behind NAT or firewall to the 
-internet. [Read the documentation here](http://bookch.in/diglet).
+Diglet is an *end-to-end encrypted* reverse HTTPS tunnel server and client. It 
+enables you to securely make any HTTP(S) server running behind a restrictive 
+NAT or firewall to the internet.
 
-> Diglet is basically just a [localtunnel](https://localtunnel.github.io/www/) 
-> bikeshed that aims to provide a more flexible programmatic interface.
+Installation
+------------
+
+Diglet depends on Node.js LTS and the appropriate packages for building native 
+modules for your platform.
 
 ```bash
+# install nodejs via node version manager
+# skip this step on windows and just install the package from nodejs.org
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+
+# source node version manager
+source ~/.bashrc
+
+# install nodejs lts release
+nvm install --lts
+
+# install build dependencies (debian based)
+#   apt install build-essential 
+# 
+# install build dependencies (macos / osx)
+#   xcode-select --install
+# 
+# install build dependencies (windows)
+#   npm install -g windows-build-tools
+
+# install diglet using node package manager
 npm install -g diglet
 ```
 
-Basic Usage
------------
+Client Tunneling
+----------------
 
-Diglet can be used out of the box with zero configuration to tunnel a local 
-server through to the internet with the `diglet` command line program. This 
-works by establishing a connection with a diglet server that is already on 
-the internet. A diglet client running on your computer is used to open this 
-connection along with a connection to your local server. Requests received
-by the remote diglet server are proxied through you your connected diglet 
-client which then proxies the connection to your local server and back.
+Once you have the `diglet` package installed, you can use it to establish a 
+reverse tunnel from a local HTTP(S) server to a diglet server on the internet.
+By default, diglet is configured to use a test server `tunnel.bookch.in`. Don't
+depend on it, but if it's online you can feel free to test with it. It is 
+recommended to run your own diglet server, which is described in detail in the 
+next section.
 
-Start a diglet server on the remote host simply with:
+Setting up a tunnel is easy. Let's say you have a website running at 
+`localhost:8080`:
 
 ```bash
-diglet server
+diglet tunnel --port 8080
 ```
 
-Expose a service on port 8080 from your local computer with:
+Diglet will establish a tunnel and print your unique public URL to the console. 
+If you would like more verbose logging, which can be useful for debugging, add 
+the `--debug` flag to the above command. Your unique URL includes a subdomain 
+that is a 160 bit hash of your public key. The private portion of this key is 
+generated automatically every time you run diglet. 
+
+If you want to re-use the same URL every time you create a tunnel, pass the 
+`--save` flag and it will be saved to `$HOME/.diglet.prv` and that key will be 
+used going forward when called with the `--load` option. Note that if you use a 
+saved key, you must not load the same key when running multiple tunnels on the 
+same host or you will get unexpected results. 
+
+After setting up your own server, create a configuration file to reflect this 
+at the path `$HOME/.digletrc`:
 
 ```
-diglet client 8080
+Hostname=mydomain.tld
+TunnelPort=8443
 ```
 
-Config
-------
+Server Setup
+------------
 
-Diglet loads configuration from a `.digletrc` file. This file can be in either 
-INI or JSON format. The file may be placed in any of the following locations, 
-in order of load preference:
+This guide make a few assumptions about the providers you will use for your 
+server and for your domains, however this should translate to any number of 
+other providers.
 
-* `$HOME/.digletrc`
-* `$HOME/.diglet/config`
-* `$HOME/.config/diglet`
-* `$HOME/.config/diglet/config`
-* `/etc/digletrc`
-* `/etc/diglet/config`
+### Step 1: Create a VPS on Digital Ocean
 
-A `.digletrc` file may contain any of the following:
 
-```ini
-; Configuration for running a remote diglet server
 
-[server]
-  ; Server hostname for parsing subdomains as proxy IDs
-  serverHost = diglet.me
-  ; Server port to listen on
-  serverPort = 80
-  ; Maximum number of tunnel connections from client per-proxy
-  proxyMaxConnections = 12
-  ; Maximum number of proxies the server will establish
-  maxProxiesAllowed = 24
-  ; Time to wait for client to connect before destroying proxy
-  proxyIdleTimeout = 5000
-  ; Time to wait before giving up on a proxied socket agent
-  proxySocketTimeout = 5000
+### Step 2: Setup DNS A Records on Namecheap
 
-[server.proxyPortRange]
-  ; Starting port for opening client proxies
-  min = 12000
-  ; Ending port for opening client proxies
-  max = 12023
 
-; Configuration for running a local diglet client
 
-[client]
-  ; Hostname for the local server (or any server on network)
-  localAddress = localhost
-  ; Default port for the local server (or any server on network)
-  localPort = 8080
-  ; Diglet server hostname to use
-  remoteAddress = diglet.me
-  ; Diglet server port to use
-  remotePort = 80
-  ; Number of tunnel connections to maintain to proxy
-  maxConnections = 12
-```
+### Step 3: Generate Wildcard SSL with LetsEncrypt
+
+
+
+### Step 4: Configure Diglet Server
+
+
+
+How It Works
+------------
+
+
 
 Programmatic Usage
 ------------------
 
-While diglet may be used as a standalone tunnel server/client, it's primary 
-objective is to be used as a library for implementing your own tunneling 
-system - which is useful for distributed applications/networks.
+You can establish a reverse tunnel programmatically from other Node.js 
+programs easily. Just install diglet as a dependency of your project:
 
-Diglet exposes a simple interface for accomplishing this; there are only a 
-few components:
-
-1. `diglet.Server`
-2. `diglet.Proxy`
-3. `diglet.Tunnel`
-
-### `diglet.Server`
-
-The server component is used to manage a collection of `diglet.Proxy` 
-instances. It is not a traditional server in that it does not need to be bound 
-to a port itself, so it can be used simply as a management interface within 
-your own server.
-
-You create a `diglet.Server` with some options dictating how it should open 
-client tunnels and expose them to the world, then your application may choose 
-how to route requests to those tunnels.
-
-```js
-const diglet = require('diglet');
-const server = new diglet.Server({
-  proxyPortRange: { min: 9000, max: 9009 },
-  maxProxiesAllowed: 10,
-  proxyMaxConnections: 6,
-  proxyIdleTimeout: 2000,
-  logger: console
-});
+```bash
+npm install diglet --save
 ```
 
-Once you have created a `diglet.Server`, you can use it to create proxies and 
-route requests to them. For example, you might implement an API endpoint that 
-your users hit to create a proxy for them:
+Import the module and use the `Tunnel` class:
 
 ```js
-const app = require('express')();
-
-app.get('/proxy', (req, res, next) => {
-  server.addProxy(req.query.proxyId, (err, proxy) => {
-    if (err) {
-      return next(err);
-    }
-
-    res.json({
-      publicUrl: 'https://mydomain.tld/proxy/' + proxy.getProxyId(),
-      tunnelHost: 'mydomain.tld',
-      tunnelPort: proxy.getProxyPort()
-    });
-  });
-});
-```
-
-The result of this API request provides a client with enough information to 
-establish a tunnel connection using a `diglet.Tunnel`. You also need a way to 
-route incoming requests to your own server down through your client's tunnel.
-
-```js
-app.use('/proxy/:proxyId', (req, res, next) => {
-  server.routeHttpRequest(req.params.proxyId, req, res, (didRoute) => {
-    console.info('The request was routed to tunnel? ', didRoute);
-  });
-});
-```
-
-### `diglet.Tunnel`
-
-The last piece to this puzzle is establishing a tunnel to the "back-side" of 
-the proxy. A tunnel consists of a pool of TCP sockets to the proxy with each 
-bearing a corresponding TCP socket to a local address and port (the service 
-the client wishes to expose).
-
-> In the example above, the proxy server is routing to tunnels based on the URL 
-> path, so we will need to account for that in our tunnel by transforming the 
-> request path before passing the request back to our local server.
-
-```js
-const pathTransformer = getTransformStreamToRewriteHttpPath();
-const tunnel = new diglet.Tunnel({
-  maxConnections: 6,
-  logger: console,
-  localAddress: 'localhost',
+const { Tunnel } = require('diglet');
+const options = {
+  localAddress: '127.0.0.1',
   localPort: 8080,
-  remoteAddress: 'mydomain.tld',
-  remotePort: 12000, // result from proxy.getProxyPort()
-  transform: pathTransformer
-});
+  remoteAddress: 'mydigletserver.tld',
+  remotePort: 8443,
+  logger: console, // optional
+  privateKey: require('crypto').randomBytes(32) // optional
+};
+const tunnel = new Tunnel(options);
 
 tunnel.once('established', function() {
-  console.info('tunnel is established!');
+  console.log(tunnel.url);
+});
+
+tunnel.once('error', function(err) {
+  console.error(err);
 });
 
 tunnel.open();

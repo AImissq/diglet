@@ -94,7 +94,13 @@ server.listen(parseInt(config.TunnelPort), function() {
 
 // NB: We do a heartbeat every minute
 setInterval(() => {
-  async.eachLimit([...server._proxies], 6, ([id], done) => {
+  async.eachLimit([...server._proxies], 6, ([id, proxy], done) => {
+    if (proxy._connectedSockets.length === 0) {
+      logger.info('proxy %s has no connected sockets, destroying...', id);
+      server._proxies.delete(id);
+      return done();
+    }
+
     const url = `http://${id}.${config.Hostname}:${config.ProxyPort}`;
 
     logger.info('sending heartbeat to %s (%s)', id, url);
