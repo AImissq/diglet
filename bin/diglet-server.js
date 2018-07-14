@@ -4,7 +4,7 @@
 
 const fs = require('fs');
 const async = require('async');
-const https = require('http');
+const https = require('https');
 const diglet = require('..');
 const path = require('path');
 const tld = require('tldjs');
