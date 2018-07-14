@@ -284,6 +284,16 @@ tunnel.once('error', function(err) {
 tunnel.open();
 ```
 
+Building a Release
+------------------
+
+```bash
+git clone https://gitlab.com/bookchin/diglet.git
+cd diglet
+npm install
+npm run release # releases for all platforms will be in dist/
+```
+
 License
 -------
 
