@@ -210,7 +210,44 @@ Repeat as many of these lines as you like to add more authorized clients.
 How It Works
 ------------
 
+Diglet is a relatively simple machine. It consists of only 4 classes: Server, 
+Proxy, Tunnel, and Handshake. A server performs two duties: it listens for 
+HTTPS requests on the internet and forwards them through a pool of tunnels 
+associated with a proxy.
 
+When a client establishes a tunnel, it connects to a TCP socket on the Diglet 
+server over TLS. The server issues a challenge to the client which the client 
+signs using ECDSA to authenticate it's identity. This is the handshake and if 
+it's successful, the client keeps the socket open and the server adds it to a 
+pool of other connections ("tunnels") from this same client.
+
+This connection pool is associated with the client's identity key and is called 
+a "proxy". When the diglet server receives a HTTPS request on the "front", it 
+parses the subdomain, matches it against the currently managed proxies. If it 
+finds a proxy that matches, it selects one of the open tunnels back to the 
+client and pipes the incoming request through it.
+
+On the client's end, every tunnel that is established is connected to an open 
+socket to a local HTTP(S) service running on the client's computer (but not 
+accessible directly over the internet). When the diglet proxy forwards an 
+incoming request down the tunnel, it is received by the client and forwarded 
+straight through to the client's local server which responds and the resulting 
+response get piped back through the tunnel, up to the diglet server, and on 
+through to the host that made the original HTTPS request.
+
+Every connection along this path is secured with TLS, making all messages sent 
+over the wire end-to-end encrypted, even if the server running on the client's 
+computer is *not* secured with SSL. Every time a a tunnel is used, it is 
+disposed of and new tunnel is opened in its place. This allows for a fairly 
+high number of requests to be serviced at any given moment. Diglet will even 
+queue requests until a new tunnel is opened if all tunnels are exhausted or 
+if the client disconnects or has a poor connection.
+
+Diglet intentionally does not support cleartext connections and by default is 
+configured to redirect all requests to port 80 to port 443. We recommend using 
+the browser extension [HTTPSEverywhere](https://www.eff.org/https-everywhere), 
+since this technique is still allows an attacker to intercept and redirect the 
+original request if HTTPS is not explicity used.
 
 Programmatic Usage
 ------------------
