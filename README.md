@@ -1,5 +1,5 @@
-![Diglet](https://raw.githubusercontent.com/bookchin/diglet/master/static/diglet.png)
-========
+Diglet
+======
 
 [![NPM](https://img.shields.io/npm/v/diglet.svg?style=flat-square)](https://www.npmjs.com/package/diglet)
 [![License](https://img.shields.io/badge/license-AGPL3.0-blue.svg?style=flat-square)](https://gitlab.com/bookchin/diglet/raw/master/LICENSE)
