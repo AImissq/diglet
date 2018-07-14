@@ -3,7 +3,7 @@
 'use strict';
 
 const async = require('async');
-const http = require('http');
+const https = require('http');
 const diglet = require('..');
 const path = require('path');
 const tld = require('tldjs');
@@ -41,7 +41,7 @@ function getProxyIdFromSubdomain(request) {
 }
 
 function getPublicUrlForProxy(proxy) {
-  return `http://${proxy.id}.${config.Hostname}:${config.ProxyPort}`;
+  return `https://${proxy.id}.${config.Hostname}:${config.ProxyPort}`;
 }
 
 function handleServerRequest(request, response) {
@@ -64,10 +64,25 @@ function handleServerUpgrade(request, socket) {
   server.routeWebSocketConnection(proxyId, request, socket, () => null);
 }
 
-const proxy = http.createServer();
+if (!config.ServerPrivateKey || !config.ServerSSLCertificate) {
+  console.error('\n  error: no private key or certificate defined in config');
+  process.exit(1);
+}
+
+const proxy = https.createServer({
+  key: fs.readFileSync(config.ServerPrivateKey),
+  cert: fs.readFileSync(config.ServerSSLCertificate)
+});
 
 proxy.on('request', handleServerRequest)
 proxy.on('upgrade', handleServerUpgrade)
+
+require('http').createServer(function(req, res) {
+  res.writeHead(302, {
+    Location: `https://${req.headers.host}${req.url}`
+  });
+  res.end();
+}).listen(parseInt(config.RedirectPort));
 
 console.info(`
 
@@ -101,10 +116,10 @@ setInterval(() => {
       return done();
     }
 
-    const url = `http://${id}.${config.Hostname}:${config.ProxyPort}`;
+    const url = `https://${id}.${config.Hostname}:${config.ProxyPort}`;
 
     logger.info('sending heartbeat to %s (%s)', id, url);
-    http.get(url, (res) => {
+    https.get(url, (res) => {
       res.resume();
       done();
     }).on('error', () => null);

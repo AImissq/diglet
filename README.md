@@ -107,7 +107,47 @@ certificate.
 
 ### Step 3: Generate Wildcard SSL with LetsEncrypt
 
+SSH into your droplet with `ssh root@<your droplet ip address>` and install 
+LetsEncrypt's `certbot-auto` program. The version that is in the Debian 
+repositories does not support wildcard certs, so you must install with:
 
+```bash
+# download the certbot program
+wget https://dl.eff.org/certbot-auto
+
+# make it executable
+chmod +x certbot-auto
+
+# request certificates for your domain and wildcard subdomain
+./certbot-auto certonly --manual -d *.mydomainname.tld \ 
+--agree-tos \
+--no-bootstrap --manual-public-ip-logging-ok --preferred-challenges dns-01 \
+-m your-email-address  \
+--server https://acme-v02.api.letsencrypt.org/directory
+```
+
+Certbot will do some work and respond with something similar to:
+
+```
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Please deploy a DNS TXT record under the name
+_acme-challenge.tunnel.bookch.in with the following value:
+
+20BbljVikhE2Hc4O6LsFoBuxUNSycRkioV2sezLnVLA
+
+Before continuing, verify the record is deployed.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Press Enter to Continue
+
+```
+
+Log back into Namecheap and navigate back to *Domain List > Domain > Advanced 
+DNS* and create a new TXT record according to the instructions provided by 
+certbot. Set TTL to 1 minute and save. Come back to your SSH session where 
+certbot is waiting and press enter. Certbot will verify the TXT record and 
+issue you a wildcard subdomain certificate and private key will be placed in 
+`/etc/letsencrypt/live/mydomain.tld/`. Note that path, because you'll need it 
+in the next step where we will configure our Diglet server.
 
 ### Step 4: Configure Diglet Server
 
