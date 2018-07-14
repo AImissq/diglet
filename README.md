@@ -151,7 +151,61 @@ in the next step where we will configure our Diglet server.
 
 ### Step 4: Configure Diglet Server
 
+Install Diglet on your droplet according to the instructions in the 
+*Installation* section. Note that if you are installing and running 
+diglet as root, you need to append `--unsafe-perm` to the install 
+command.
 
+Create a file called `.digletrc` in the home directory (`/root/.digletrc`),
+containing the following:
+
+```ini
+Hostname = mydomain.tld
+ProxyPort = 443
+RedirectPort = 80
+TunnelPort = 8443
+ServerPrivateKey = /etc/letsencrypt/live/mydomain.tld/privkey.pem
+ServerSSLCertificate = /etc/letsencrypt/live/mydomain.tld/fullchain.pem
+```
+
+Be sure to replace `mydomain.tld` with your domain name. When you are ready 
+go ahead and run `diglet server` to start up your server!
+
+#### Using a Process Manager
+
+You can run Diglet in the background and have it restart automatically in the 
+unlikely event the process crashes using the 
+[`forever`](https://github.com/foreverjs/forever) package.
+
+```bash
+npm install -g forever # add --unsafe-perm if running as root
+```
+
+Then start Diglet using forever with:
+
+```bash
+forever start $(which diglet)
+```
+
+Refer to the forever documentation for more information on how to monitor your 
+process.
+
+#### Whitelisting Clients
+
+Diglet also supports a whitelist feature that prevents arbitrary clients from
+establishing tunnels. This is an optional feature that allows you to set a 
+list of client tunnel identifiers in your configuration file. The identifiers 
+are the RMD-160 hash of the user's public key.
+
+For example, if you want to only allow the identity 
+`3b7bc044d717e272cde960a8da782846425fd59c` to establish a tunnel, add the 
+following to your `.digletrc`:
+
+```ini
+Whitelist[]=3b7bc044d717e272cde960a8da782846425fd59c
+```
+
+Repeat as many of these lines as you like to add more authorized clients.
 
 How It Works
 ------------

@@ -121,7 +121,13 @@ setInterval(() => {
     const url = `https://${id}.${config.Hostname}:${config.ProxyPort}`;
 
     logger.info('sending heartbeat to %s (%s)', id, url);
-    https.get(url, (res) => {
+    https.request({
+      host: `${id}.${config.Hostname}`,
+      port: parseInt(config.ProxyPort),
+      headers: {
+        'User-Agent': 'Diglet Heartbeat'
+      }
+    }, (res) => {
       res.resume();
       done();
     }).on('error', () => null);
