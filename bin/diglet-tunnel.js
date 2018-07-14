@@ -15,6 +15,7 @@ const DEFAULT_KEY_PATH = path.join(os.homedir(), '.diglet.prv');
 
 
 program
+  .version(require('../package').version)
   .option('--port <port>', 'local port to reverse tunnel', 8080)
   .option('--save [path]', 'save the generated key')
   .option('--load [path]', 'load the saved key')

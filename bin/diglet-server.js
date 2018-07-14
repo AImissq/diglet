@@ -13,6 +13,7 @@ const config = require('./_config');
 const program = require('commander');
 
 program
+  .version(require('../package').version)
   .option('-d, --debug', 'show verbose logs')
   .parse(process.argv);
 
