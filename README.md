@@ -6,7 +6,7 @@ Diglet
 
 Diglet is an *end-to-end encrypted* reverse HTTPS tunnel server and client. It 
 enables you to securely make any HTTP(S) server running behind a restrictive 
-NAT or firewall to the internet.
+NAT or firewall accessible from the internet.
 
 Installation
 ------------
