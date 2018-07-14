@@ -10,15 +10,21 @@ const path = require('path');
 const tld = require('tldjs');
 const bunyan = require('bunyan');
 const config = require('./_config');
-const serveStatic = require('serve-static')(
-  path.join(__dirname, '../static')
-);
 const program = require('commander');
 
 program
   .option('-d, --debug', 'show verbose logs')
   .parse(process.argv);
 
+if (!config.ServerPrivateKey || !config.ServerSSLCertificate) {
+  console.error('\n  error: no private key or certificate defined in config');
+  process.exit(1);
+}
+
+const credentials = {
+  key: fs.readFileSync(config.ServerPrivateKey),
+  cert: fs.readFileSync(config.ServerSSLCertificate)
+};
 const logger = bunyan.createLogger({
   name: 'diglet-server',
   level: program.debug ? 'info' : 'error'
@@ -26,7 +32,7 @@ const logger = bunyan.createLogger({
 const whitelist = config.Whitelist && config.Whitelist.length
   ? config.Whitelist
   : false;
-const server = new diglet.Server({ logger, whitelist });
+const server = new diglet.Server({ logger, whitelist, ...credentials });
 
 function getProxyIdFromSubdomain(request) {
   let subdomain = tld.getSubdomain(request.headers.host);
@@ -51,7 +57,10 @@ function handleServerRequest(request, response) {
   if (proxyId) {
     server.routeHttpRequest(proxyId, request, response, () => null);
   } else {
-    serveStatic(request, response, () => response.end());
+    res.writeHead(302, {
+      Location: `https://gitlab.com/bookchin/diglet`
+    });
+    res.end();
   }
 }
 
@@ -65,15 +74,7 @@ function handleServerUpgrade(request, socket) {
   server.routeWebSocketConnection(proxyId, request, socket, () => null);
 }
 
-if (!config.ServerPrivateKey || !config.ServerSSLCertificate) {
-  console.error('\n  error: no private key or certificate defined in config');
-  process.exit(1);
-}
-
-const proxy = https.createServer({
-  key: fs.readFileSync(config.ServerPrivateKey),
-  cert: fs.readFileSync(config.ServerSSLCertificate)
-});
+const proxy = https.createServer(credentials);
 
 proxy.on('request', handleServerRequest)
 proxy.on('upgrade', handleServerUpgrade)
