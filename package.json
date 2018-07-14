@@ -4,12 +4,17 @@
   "description": "secure end-to-end encrypted reverse https tunnel",
   "main": "index.js",
   "bin": {
-    "diglet": "bin/diglet.js"
+    "diglet": "bin/diglet.js",
+    "diglet-server": "bin/diglet-server.js",
+    "diglet-tunnel": "bin/diglet-tunnel.js"
   },
   "scripts": {
     "test": "mocha --exit",
     "linter": "eslint index.js lib test",
-    "coverage": "istanbul cover _mocha -- --exit"
+    "coverage": "istanbul cover _mocha -- --exit",
+    "release-tunnel": "pkg ./bin/diglet-tunnel.js --out-path dist",
+    "release-server": "pkg ./bin/diglet-server.js --out-path dist",
+    "release": "npm run release-tunnel && npm run release-server"
   },
   "repository": {
     "type": "git",
@@ -30,6 +35,7 @@
     "eslint": "^5.1.0",
     "istanbul": "^0.4.5",
     "mocha": "^5.2.0",
+    "pkg": "^4.3.3",
     "proxyquire": "^1.7.10",
     "sinon": "^1.17.6",
     "ws": "^1.1.1"
