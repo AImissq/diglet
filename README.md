@@ -78,7 +78,7 @@ TunnelPort=8443
 Server Setup
 ------------
 
-This guide make a few assumptions about the providers you will use for your 
+This guide makes a few assumptions about the providers you will use for your 
 server and for your domains, however this should translate to any number of 
 other providers.
 
@@ -246,7 +246,7 @@ if the client disconnects or has a poor connection.
 Diglet intentionally does not support cleartext connections and by default is 
 configured to redirect all requests to port 80 to port 443. We recommend using 
 the browser extension [HTTPSEverywhere](https://www.eff.org/https-everywhere), 
-since this technique is still allows an attacker to intercept and redirect the 
+since this technique still allows an attacker to intercept and redirect the 
 original request if HTTPS is not explicity used.
 
 Programmatic Usage
@@ -297,8 +297,8 @@ npm run release # releases for all platforms will be in dist/
 License
 -------
 
-Diglet - Simple HTTP Tunneling  
-Copyright (C) 2016 Gordon Hall
+Diglet - End to End Encrypted Reverse HTTPS Tunnel  
+Copyright (C) 2016-2018 Gordon Hall
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published
