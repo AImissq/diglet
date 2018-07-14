@@ -84,11 +84,48 @@ other providers.
 
 ### Step 1: Create a VPS on Digital Ocean
 
+Login or create an account at [Digital Ocean](https://digitalocean.com), then 
+navigate to *Droplets > Create*. Under *Distributions*, select *Debian*.
 
+![debian droplet](static/1.png)
+
+Diglet does not require very many resources, so you may safely select the 
+cheapest option with *1 vCPU + 1GB Memory*.
+
+![cheapest option](static/2.png)
+
+Be sure to add your SSH public key to the droplet so we are able to log into 
+it when we are ready.
+
+![ssh key](static/3.png)
+
+Name your droplet something memorable like "diglet-server" and create it.
+
+![hostname](static/4.png)
+
+When your droplet is finished being created, take note of its IP address, 
+because we'll need it for the next step.
+
+![ip address](static/5.png)
 
 ### Step 2: Setup DNS A Records on Namecheap
 
+Login or create an account at [Namecheap](https://namecheap.com), then either 
+purchase a new domain or navigate to your existing domain list.
 
+![domain list](static/6.png)
+
+Navigate to *Advanced DNS* and create a new subdomain wildcard A record. In 
+this example, I've created two: one at `tunnel.bookch.in` where my diglet 
+server will be and one for `*.tunnel.bookch.in` where my tunnels will be 
+accessible. Point both records to the IP address of your Digital Ocean 
+droplet you just created.
+
+![advanced dns](static/7.png)
+
+You'll want to set the TTL to the lowest available option, because we want 
+this to propagate as quickly as possible so we can generate our SSL 
+certificate.
 
 ### Step 3: Generate Wildcard SSL with LetsEncrypt
 
