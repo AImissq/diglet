@@ -81,7 +81,7 @@ proxy.on('request', handleServerRequest)
 proxy.on('upgrade', handleServerUpgrade)
 
 require('http').createServer(function(req, res) {
-  res.writeHead(302, {
+  res.writeHead(301, {
     Location: `https://${req.headers.host}${req.url}`
   });
   res.end();
