@@ -247,7 +247,12 @@ Diglet intentionally does not support cleartext connections and by default is
 configured to redirect all requests to port 80 to port 443. We recommend using 
 the browser extension [HTTPSEverywhere](https://www.eff.org/https-everywhere), 
 since this technique still allows an attacker to intercept and redirect the 
-original request if HTTPS is not explicity used.
+original request if HTTPS is not explicity used. Diglet does, however, modify 
+the response sent back from your tunneled server to include a 
+[HTTP Strict Transport Security (HSTS)](https://en.m.wikipedia.org/wiki/HTTP_Strict_Transport_Security) 
+header so that there should only *ever* be a single unencrypted request that 
+has to be redirected for a user *if* they mistakenly try to access your tunnel 
+over HTTP.
 
 Programmatic Usage
 ------------------

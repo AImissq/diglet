@@ -58,7 +58,7 @@ function handleServerRequest(request, response) {
   if (proxyId) {
     server.routeHttpRequest(proxyId, request, response, () => null);
   } else {
-    response.writeHead(302, {
+    response.writeHead(301, {
       Location: `https://gitlab.com/bookchin/diglet`
     });
     response.end();
