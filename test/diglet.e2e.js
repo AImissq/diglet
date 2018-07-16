@@ -18,7 +18,9 @@ describe('@class Server + @Tunnel (end-to-end)', function() {
 
   before(function(done) {
     privkey = randomBytes(32);
-    id = createHash('rmd160').update(publicKeyCreate(privkey)).digest('hex');
+    id = createHash('rmd160').update(
+      createHash('sha256').update(publicKeyCreate(privkey)).digest()
+    ).digest('hex');
 
     async.series([
       // Create the diglet server
