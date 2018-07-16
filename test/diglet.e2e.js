@@ -125,4 +125,11 @@ describe('@class Server + @Tunnel (end-to-end)', function() {
     }, done);
   });
 
+  after(function(done) {
+    server._server.close();
+    front.close();
+    local.close();
+    done();
+  });
+
 });
