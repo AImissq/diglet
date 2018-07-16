@@ -78,8 +78,7 @@ describe('@class Server + @Tunnel (end-to-end)', function() {
           logger
         });
 
-        tunnel.open();
-        setTimeout(next, 1000);
+        tunnel.once('connected', next).open();
       }
     ], done);
   });
