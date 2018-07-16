@@ -48,10 +48,6 @@ function getProxyIdFromSubdomain(request) {
   }
 }
 
-function getPublicUrlForProxy(proxy) {
-  return `https://${proxy.id}.${config.Hostname}:${config.ProxyPort}`;
-}
-
 function handleServerRequest(request, response) {
   let proxyId = getProxyIdFromSubdomain(request);
 

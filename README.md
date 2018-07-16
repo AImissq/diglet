@@ -278,15 +278,12 @@ const options = {
 };
 const tunnel = new Tunnel(options);
 
-tunnel.once('established', function() {
-  console.log(tunnel.url);
-});
-
 tunnel.once('error', function(err) {
   console.error(err);
 });
 
 tunnel.open();
+console.log(tunnel.url);
 ```
 
 Building a Release

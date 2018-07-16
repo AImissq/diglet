@@ -8,3 +8,6 @@ module.exports.Tunnel = require('./lib/tunnel');
 
 /** {@link Proxy} */
 module.exports.Proxy = require('./lib/proxy');
+
+/** {@link Handshake} */
+module.exports.Handshake = require('./lib/handshake');

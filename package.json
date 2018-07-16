@@ -31,14 +31,13 @@
   },
   "homepage": "https://gitlab.com/bookchin/diglet#readme",
   "devDependencies": {
-    "chai": "^3.5.0",
+    "chai": "^4.1.2",
     "eslint": "^5.1.0",
     "istanbul": "^0.4.5",
     "mocha": "^5.2.0",
+    "pem": "^1.12.5",
     "pkg": "^4.3.3",
-    "proxyquire": "^1.7.10",
-    "sinon": "^1.17.6",
-    "ws": "^1.1.1"
+    "ws": "^5.2.2"
   },
   "dependencies": {
     "async": "^2.6.1",
