@@ -4,7 +4,7 @@ Diglet
 [![NPM](https://img.shields.io/npm/v/diglet.svg?style=flat-square)](https://www.npmjs.com/package/diglet)
 [![License](https://img.shields.io/badge/license-AGPL3.0-blue.svg?style=flat-square)](https://gitlab.com/bookchin/diglet/raw/master/LICENSE)
 
-Diglet is an *end-to-end encrypted* reverse HTTPS tunnel server and client. It 
+Diglet is an *fully encrypted* reverse HTTPS tunnel server and client. It 
 enables you to securely make any HTTP(S) server running behind a restrictive 
 NAT or firewall accessible from the internet.
 
@@ -236,7 +236,7 @@ response get piped back through the tunnel, up to the diglet server, and on
 through to the host that made the original HTTPS request.
 
 Every connection along this path is secured with TLS, making all messages sent 
-over the wire end-to-end encrypted, even if the server running on the client's 
+over the wire fully encrypted, even if the server running on the client's 
 computer is *not* secured with SSL. Every time a a tunnel is used, it is 
 disposed of and new tunnel is opened in its place. This allows for a fairly 
 high number of requests to be serviced at any given moment. Diglet will even 
@@ -302,7 +302,7 @@ npm run release # releases for all platforms will be in dist/
 License
 -------
 
-Diglet - End to End Encrypted Reverse HTTPS Tunnel  
+Diglet - Fully Encrypted Reverse HTTPS Tunnel  
 Copyright (C) 2016-2018 Gordon Hall
 
 This program is free software: you can redistribute it and/or modify

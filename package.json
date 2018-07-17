@@ -1,7 +1,7 @@
 {
   "name": "diglet",
   "version": "2.0.3",
-  "description": "secure end-to-end encrypted reverse https tunnel",
+  "description": "fully encrypted reverse https tunnel",
   "main": "index.js",
   "bin": {
     "diglet": "bin/diglet.js",
