@@ -1,8 +1,8 @@
 Diglet
 ======
 
-[![NPM](https://img.shields.io/npm/v/diglet.svg?style=flat-square)](https://www.npmjs.com/package/diglet)
-[![License](https://img.shields.io/badge/license-AGPL3.0-blue.svg?style=flat-square)](https://gitlab.com/bookchin/diglet/raw/master/LICENSE)
+[![NPM](https://img.shields.io/npm/v/diglet.svg?style=flat-square)](https://www.npmjs.com/package/@deadcanaries/diglet)
+[![License](https://img.shields.io/badge/license-AGPL3.0-blue.svg?style=flat-square)](https://gitlab.com/deadcanaries/diglet/raw/master/LICENSE)
 
 Diglet is an *fully encrypted* reverse HTTPS tunnel server and client. It 
 enables you to securely make any HTTP(S) server running behind a restrictive 
@@ -35,7 +35,7 @@ nvm install --lts
 #   npm install -g windows-build-tools
 
 # install diglet using node package manager
-npm install -g diglet
+npm install -g @deadcanaries/diglet
 ```
 
 Client Tunneling
@@ -267,7 +267,7 @@ npm install diglet --save
 Import the module and use the `Tunnel` class:
 
 ```js
-const { Tunnel } = require('diglet');
+const { Tunnel } = require('@deadcanaries/diglet');
 const options = {
   localAddress: '127.0.0.1',
   localPort: 8080,
@@ -293,7 +293,7 @@ Building a Release
 ------------------
 
 ```bash
-git clone https://gitlab.com/bookchin/diglet.git
+git clone https://gitlab.com/deadcanaries/diglet.git
 cd diglet
 npm install
 npm run release # releases for all platforms will be in dist/
@@ -303,7 +303,7 @@ License
 -------
 
 Diglet - Fully Encrypted Reverse HTTPS Tunnel  
-Copyright (C) 2016-2018 Gordon Hall
+Copyright (C) 2019 Dead Canaries, Inc.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published

@@ -1,5 +1,5 @@
 {
-  "name": "diglet",
+  "name": "@deadcanaries/diglet",
   "version": "2.0.3",
   "description": "fully encrypted reverse https tunnel",
   "main": "index.js",
@@ -18,18 +18,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/bookchin/diglet.git"
+    "url": "git+https://gitlab.com/deadcanaries/diglet.git"
   },
   "keywords": [
     "tunnel",
     "https"
   ],
-  "author": "Gordon Hall <gordon@gordonwritescode.com>",
+  "author": "Gordyn Hall <gordyn@deadcanaries.org>",
   "license": "AGPL-3.0",
   "bugs": {
-    "url": "https://gitlab.com/bookchin/diglet/issues"
+    "url": "https://gitlab.com/deadcanaries/diglet/issues"
   },
-  "homepage": "https://gitlab.com/bookchin/diglet#readme",
+  "homepage": "https://gitlab.com/deadcanaries/diglet#readme",
   "devDependencies": {
     "chai": "^4.1.2",
     "eslint": "^5.1.0",
