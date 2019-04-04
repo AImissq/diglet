@@ -1,6 +1,6 @@
 {
   "name": "@deadcanaries/diglet",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "fully encrypted reverse https tunnel",
   "main": "index.js",
   "bin": {

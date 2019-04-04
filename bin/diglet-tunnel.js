@@ -73,7 +73,7 @@ console.info(`
   |____/|_|_  |_|___|_|
           |___|
 
-   Copyright (c) 2018, Gordon Hall
+   Copyright (c) 2019 Dead Canaries, Inc.
    Licensed under the GNU Affero General Public License Version 3
 `);
 console.info(`
