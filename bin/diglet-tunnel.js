@@ -19,7 +19,7 @@ program
   .option('--port <port>', 'local port to reverse tunnel', 8080)
   .option('--save [path]', 'save the generated key')
   .option('--load [path]', 'load the saved key')
-  .option('--local-server-ssl', 'indicate the local server uses tls')
+  .option('--https', 'indicate the local server uses tls')
   .option('--debug', 'show verbose logs')
   .parse(process.argv);
 
@@ -62,7 +62,7 @@ const tunnel = new diglet.Tunnel({
   remotePort: config.TunnelPort,
   logger,
   privateKey: getPrivateKey(),
-  secureLocalConnection: program.localServerSsl
+  secureLocalConnection: program.https
 });
 
 console.info(`
