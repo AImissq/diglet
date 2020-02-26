@@ -2,6 +2,7 @@
 
 'use strict';
 
+const pkg = require('../package');
 const fs = require('fs');
 const async = require('async');
 const https = require('https');
@@ -11,6 +12,8 @@ const tld = require('tldjs');
 const bunyan = require('bunyan');
 const config = require('./_config');
 const program = require('commander');
+
+const started = Date.now();
 
 program
   .version(require('../package').version)
@@ -54,10 +57,30 @@ function handleServerRequest(request, response) {
   if (proxyId) {
     server.routeHttpRequest(proxyId, request, response, () => null);
   } else {
-    response.writeHead(301, {
-      Location: `https://gitlab.com/bookchin/diglet`
-    });
-    response.end();
+    if (request.path === '/') {
+      response.writeHead(200, {
+        'Content-Type': 'applications/json'
+      });
+      response.end(JSON.stringify({
+        version: pkg.version,
+        started,
+        proxies: [...server._aliases.entries()]
+      }));
+    } else {
+      const info = server.getAliasById(request.path.substr(1));
+
+      if (info) {
+        response.writeHead(200, {
+          'Content-Type': 'application/json'
+        });
+        response.end(JSON.stringify(info));
+      } else {
+        response.writeHead(404, {
+          'Content-Type': 'application/json'
+        });
+        response.end(JSON.stringify({ message: 'not found' }));
+      }
+    }
   }
 }
 

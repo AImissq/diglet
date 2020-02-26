@@ -1,6 +1,6 @@
 {
   "name": "@deadcanaries/diglet",
-  "version": "2.0.6",
+  "version": "2.1.0",
   "description": "fully encrypted reverse https tunnel",
   "main": "index.js",
   "bin": {
@@ -36,7 +36,7 @@
     "istanbul": "^0.4.5",
     "mocha": "^5.2.0",
     "pem": "^1.14.2",
-    "pkg": "^4.3.3",
+    "pkg": "^4.4.3",
     "ws": "^5.2.2"
   },
   "dependencies": {
@@ -44,6 +44,7 @@
     "bunyan": "^1.8.5",
     "commander": "^2.9.0",
     "merge": "^1.2.1",
+    "random-word": "^2.0.0",
     "rc": "^1.1.6",
     "secp256k1": "=3.2.2",
     "tldjs": "^1.7.0"
