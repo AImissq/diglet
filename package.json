@@ -49,5 +49,8 @@
     "rc": "^1.1.6",
     "secp256k1": "=3.2.2",
     "tldjs": "^1.7.0"
+  },
+  "optionalDependencies": {
+    "http-server": "^0.12.1"
   }
 }
