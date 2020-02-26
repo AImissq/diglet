@@ -119,7 +119,7 @@ wget https://dl.eff.org/certbot-auto
 chmod +x certbot-auto
 
 # request certificates for your domain and wildcard subdomain
-./certbot-auto certonly --manual -d *.mydomainname.tld \ 
+./certbot-auto certonly --manual -d *.mydomainname.tld,mydomainname.tld \ 
 --agree-tos \
 --no-bootstrap --manual-public-ip-logging-ok --preferred-challenges dns-01 \
 -m your-email-address  \
