@@ -99,7 +99,7 @@ describe('@class Server + @Tunnel (end-to-end)', function() {
         tunnel.once('connected', next).open();
       },
       function(next) {
-        tunnel.queryProxyInfoFromServer({ rejectUnauthorized: false })
+        tunnel.queryProxyInfoFromServer({ port: 9443, rejectUnauthorized: false })
           .then(info => {
             expect(!!info.alias).to.equal(true);
             next();
@@ -108,9 +108,9 @@ describe('@class Server + @Tunnel (end-to-end)', function() {
     ], done);
   });
 
-  it('should reverse tunnel the http requests (96x)', function(done) {
+  it('should reverse tunnel the http requests (1000x)', function(done) {
     this.timeout(0);
-    async.timesLimit(96, 6, function(i, next) {
+    async.timesLimit(1000, 10, function(i, next) {
       https.get({
         host: '127.0.0.1',
         port: 9443,
@@ -132,9 +132,9 @@ describe('@class Server + @Tunnel (end-to-end)', function() {
     }, done);
   });
 
-  it('should reverse tunnel the websocket connection (96x)', function(done) {
+  it('should reverse tunnel the websocket connection (1000x)', function(done) {
     this.timeout(0);
-    async.timesLimit(96, 6, function(i, next) {
+    async.timesLimit(1000, 10, function(i, next) {
       const sock = new ws('wss://127.0.0.1:9443', {
         rejectUnauthorized: false
       });
