@@ -124,13 +124,16 @@ console.info('  ')
 
 proxy.listen(parseInt(config.ProxyPort), function() {
   console.info(colors.bold('  Your proxy frontend is available at the following URL(s):'));
+  console.info('  ');
   console.info(`      https://${config.Hostname}:${config.ProxyPort}`);
   console.info(`      https://*.${config.Hostname}:${config.ProxyPort}`);
+  console.info('  ');
 });
-console.info('  ');
 server.listen(parseInt(config.TunnelPort), function() {
   console.log(colors.bold(`   Your tunnel backend is available at the following URL(s):`));
+  console.info('  ');
   console.info(`      https://${config.Hostname}:${config.TunnelPort}`);
+  console.info('  ');
 });
 
 // NB: We do a heartbeat every minute
