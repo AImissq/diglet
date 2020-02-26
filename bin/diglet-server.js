@@ -10,7 +10,7 @@ const diglet = require('..');
 const path = require('path');
 const tld = require('tldjs');
 const bunyan = require('bunyan');
-const URL = require('url');
+const { URL } = require('url');
 const config = require('./_config');
 const program = require('commander');
 
