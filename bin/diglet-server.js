@@ -10,7 +10,6 @@ const diglet = require('..');
 const path = require('path');
 const tld = require('tldjs');
 const bunyan = require('bunyan');
-const { URL } = require('url');
 const config = require('./_config');
 const program = require('commander');
 
@@ -68,8 +67,7 @@ function handleServerRequest(request, response) {
         proxies: [...server._aliases.entries()]
       }));
     } else {
-      const url = new URL(request.url);
-      const info = server.getAliasById(url.path.substr(1));
+      const info = server.getAliasById(request.url.substr(1, 20));
 
       if (info) {
         response.writeHead(200, {
