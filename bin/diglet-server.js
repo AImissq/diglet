@@ -67,7 +67,8 @@ function handleServerRequest(request, response) {
         proxies: [...server._aliases.entries()]
       }));
     } else {
-      const info = server.getAliasById(request.path.substr(1));
+      const url = new URL(request.url);
+      const info = server.getAliasById(url.path.substr(1));
 
       if (info) {
         response.writeHead(200, {

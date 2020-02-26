@@ -80,7 +80,7 @@ console.info('  Your tunnel is available at:');
 console.info('  ');
 console.info(`  ${tunnel.url}`);
 
-tunnel.queryProxyInfoFromServer()
+tunnel.queryProxyInfoFromServer({ rejectUnauthorized: false })
   .then(info => {
     console.info(`  ${info.alias}`);
   })
