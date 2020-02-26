@@ -82,7 +82,7 @@ console.info('  ')
 console.info('  ')
 console.info(colors.bold('  Check tunnel info and diagnostics:'));
 console.info('  ');
-console.info(`      ${tunnel.url}`);
+console.info(`      https://${config.Hostname}/${tunnel.id}`);
 
 tunnel.once('connected', () => {
   console.info('  ');
