@@ -2,6 +2,7 @@
 
 'use strict';
 
+const colors = require('colors/safe');
 const pkg = require('../package');
 const fs = require('fs');
 const async = require('async');
@@ -59,7 +60,7 @@ function handleServerRequest(request, response) {
   } else {
     if (request.url === '/') {
       response.writeHead(200, {
-        'Content-Type': 'applications/json'
+        'Content-Type': 'application/json'
       });
       response.end(JSON.stringify({
         version: pkg.version,
@@ -106,7 +107,7 @@ require('http').createServer(function(req, res) {
   res.end();
 }).listen(parseInt(config.RedirectPort));
 
-console.info(`
+console.info(colors.bold(`
 
    ____  _     _     _
   |    \\|_|___| |___| |_
@@ -114,19 +115,22 @@ console.info(`
   |____/|_|_  |_|___|_|
           |___|
 
-   Copyright (c) 2019 Dead Canaries, Inc.
-   Licensed under the GNU Affero General Public License Version 3
-`);
+`));
+console.info(colors.italic('   Copyright (c) 2019 Dead Canaries, Inc.'));
+console.info(colors.italic('   Licensed under the GNU Affero General Public License Version 3'));
+console.info('  ')
+console.info('  ')
+console.info('  ')
 
 proxy.listen(parseInt(config.ProxyPort), function() {
-  console.log(
-    `   Your Diglet proxy is running on port ${config.ProxyPort}`
-  );
+  console.info(colors.bold('  Your proxy frontend is available at the following URL(s):'));
+  console.info(`      https://${config.Hostname}:${config.ProxyPort}`);
+  console.info(`      https://*.${config.Hostname}:${config.ProxyPort}`);
 });
+console.info('  ');
 server.listen(parseInt(config.TunnelPort), function() {
-  console.log(
-    `   Your Diglet tunnel is running on port ${config.TunnelPort}`
-  );
+  console.log(colors.bold(`   Your tunnel backend is available at the following URL(s):`));
+  console.info(`      https://${config.Hostname}:${config.TunnelPort}`);
 });
 
 // NB: We do a heartbeat every minute

@@ -2,6 +2,7 @@
 
 'use strict';
 
+const colors = require('colors/safe');
 const path = require('path');
 const os = require('os');
 const bunyan = require('bunyan');
@@ -65,7 +66,7 @@ const tunnel = new diglet.Tunnel({
   secureLocalConnection: program.https
 });
 
-console.info(`
+console.info(colors.bold(`
 
    ____  _     _     _
   |    \\|_|___| |___| |_
@@ -73,19 +74,29 @@ console.info(`
   |____/|_|_  |_|___|_|
           |___|
 
-   Copyright (c) 2019 Dead Canaries, Inc.
-   Licensed under the GNU Affero General Public License Version 3
-`);
-console.info('  Your tunnel is available at:');
+`));
+console.info(colors.italic('   Copyright (c) 2019 Dead Canaries, Inc.'));
+console.info(colors.italic('   Licensed under the GNU Affero General Public License Version 3'));
+console.info('  ')
+console.info('  ')
+console.info('  ')
+console.info(colors.bold('  Check tunnel info and diagnostics:'));
 console.info('  ');
-console.info(`  ${tunnel.url}`);
+console.info(`      ${tunnel.url}`);
 
-tunnel.queryProxyInfoFromServer({ rejectUnauthorized: false })
-  .then(info => {
-    console.info(`  ${info.alias}`);
-  })
-  .catch(err => {
-    console.error(`  ERR! ${err.message}`);
-  });
+tunnel.once('connected', () => {
+  console.info('  ');
+  console.info(colors.bold('  Your tunnel is available at the following URL(s):'));
+  console.info('  ');
+  console.info(`      ${tunnel.url}`);
+
+  tunnel.queryProxyInfoFromServer({ rejectUnauthorized: false })
+    .then(info => {
+      console.info(`      ${tunnel.aliasUrl(info.alias)}`);
+    })
+    .catch(err => {
+      console.error(`  ERR! ${err.message}`);
+    });
+});
 
 tunnel.open();
