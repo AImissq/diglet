@@ -57,7 +57,7 @@ function handleServerRequest(request, response) {
   if (proxyId) {
     server.routeHttpRequest(proxyId, request, response, () => null);
   } else {
-    if (request.path === '/') {
+    if (request.url === '/') {
       response.writeHead(200, {
         'Content-Type': 'applications/json'
       });
@@ -67,7 +67,7 @@ function handleServerRequest(request, response) {
         proxies: [...server._aliases.entries()]
       }));
     } else {
-      const info = server.getAliasById(request.url.substr(1, 20));
+      const info = server.getProxyInfoById(request.url.substr(1, 40));
 
       if (info) {
         response.writeHead(200, {

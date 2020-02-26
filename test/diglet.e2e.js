@@ -41,7 +41,23 @@ describe('@class Server + @Tunnel (end-to-end)', function() {
           });
 
           front.on('request', function(request, response) {
-            server.routeHttpRequest(id, request, response, () => null);
+            if (request.url === '/') {
+              server.routeHttpRequest(id, request, response, () => null);
+            } else {
+              const info = server.getProxyInfoById(request.url.substr(1, 40));
+
+              if (info) {
+                response.writeHead(200, {
+                  'Content-Type': 'application/json'
+                });
+                response.end(JSON.stringify(info));
+              } else {
+                response.writeHead(404, {
+                  'Content-Type': 'application/json'
+                });
+                response.end(JSON.stringify({ message: 'not found' }));
+              }
+            }
           });
 
           front.on('upgrade', function(request, socket) {
@@ -77,10 +93,17 @@ describe('@class Server + @Tunnel (end-to-end)', function() {
           remoteAddress: '127.0.0.1',
           remotePort: 9444,
           privateKey: privkey,
-          logger
+          logger,
         });
 
         tunnel.once('connected', next).open();
+      },
+      function(next) {
+        tunnel.queryProxyInfoFromServer({ rejectUnauthorized: false })
+          .then(info => {
+            expect(!!info.alias).to.equal(true);
+            next();
+          }, next);
       }
     ], done);
   });
