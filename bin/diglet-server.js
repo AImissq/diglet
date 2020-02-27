@@ -11,7 +11,6 @@ const async = require('async');
 const https = require('https');
 const diglet = require('..');
 const path = require('path');
-const tld = require('tldjs');
 const bunyan = require('bunyan');
 const config = require('./_config');
 const program = require('commander');
