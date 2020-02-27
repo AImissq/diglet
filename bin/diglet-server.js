@@ -43,7 +43,7 @@ for (let prop in config) {
   options[camelCase(prop)] = config[prop];
 }
 
-const cluster = new diglet.Cluster(parseInt(program.workers), {
+const app = new diglet.Cluster(parseInt(program.workers), {
   logger,
   ...options
 });
@@ -65,7 +65,7 @@ if (cluster.isMaster) {
   console.info('  ')
 }
 
-cluster.listen(function() {
+app.listen(function() {
   if (!cluster.isMaster) {
     return;
   }
