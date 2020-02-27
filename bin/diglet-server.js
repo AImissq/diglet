@@ -2,6 +2,7 @@
 
 'use strict';
 
+const { camelCase } = require('camel-case');
 const colors = require('colors/safe');
 const pkg = require('../package');
 const fs = require('fs');
@@ -15,9 +16,11 @@ const config = require('./_config');
 const program = require('commander');
 
 const started = Date.now();
+const cpus = require('os').cpus().length;
 
 program
   .version(require('../package').version)
+  .option('-w, --workers <n>', 'number of worker processes to spawn', cpus)
   .option('-d, --debug', 'show verbose logs')
   .parse(process.argv);
 
@@ -26,86 +29,18 @@ if (!config.ServerPrivateKey || !config.ServerSSLCertificate) {
   process.exit(1);
 }
 
-const credentials = {
-  key: fs.readFileSync(config.ServerPrivateKey),
-  cert: fs.readFileSync(config.ServerSSLCertificate)
-};
+config.ServerPrivateKey = fs.readFileSync(config.ServerPrivateKey);
+confid.ServerSSLCertificate = fs.readFileSync(config.ServerSSLCertificate);
+
 const logger = bunyan.createLogger({
   name: 'diglet-server',
   level: program.debug ? 'info' : 'error'
 });
-const whitelist = config.Whitelist && config.Whitelist.length
-  ? config.Whitelist
-  : false;
-const server = new diglet.Server({ logger, whitelist, ...credentials });
-
-function getProxyIdFromSubdomain(request) {
-  let subdomain = tld.getSubdomain(request.headers.host);
-  let parts = subdomain ? subdomain.split('.') : [];
-
-  if (request.headers.host === config.Hostname) {
-    return '';
-  } else if (parts.length > 1) {
-    return parts[0];
-  } else {
-    return subdomain;
-  }
-}
-
-function handleServerRequest(request, response) {
-  let proxyId = getProxyIdFromSubdomain(request);
-
-  if (proxyId) {
-    server.routeHttpRequest(proxyId, request, response, () => null);
-  } else {
-    if (request.url === '/') {
-      response.writeHead(200, {
-        'Content-Type': 'application/json'
-      });
-      response.end(JSON.stringify({
-        version: pkg.version,
-        started,
-        proxies: [...server._aliases.entries()]
-      }));
-    } else {
-      const info = server.getProxyInfoById(request.url.substr(1, 40));
-
-      if (info) {
-        response.writeHead(200, {
-          'Content-Type': 'application/json'
-        });
-        response.end(JSON.stringify(info));
-      } else {
-        response.writeHead(404, {
-          'Content-Type': 'application/json'
-        });
-        response.end(JSON.stringify({ message: 'not found' }));
-      }
-    }
-  }
-}
-
-function handleServerUpgrade(request, socket) {
-  let proxyId = getProxyIdFromSubdomain(request);
-
-  if (!proxyId) {
-    return socket.destroy();
-  }
-
-  server.routeWebSocketConnection(proxyId, request, socket, () => null);
-}
-
-const proxy = https.createServer(credentials);
-
-proxy.on('request', handleServerRequest)
-proxy.on('upgrade', handleServerUpgrade)
-
-require('http').createServer(function(req, res) {
-  res.writeHead(301, {
-    Location: `https://${req.headers.host}${req.url}`
-  });
-  res.end();
-}).listen(parseInt(config.RedirectPort));
+const options = camelCase(config);
+const cluster = new diglet.Cluster(parseInt(program.workers), {
+  logger,
+  ...options
+});
 
 console.info(colors.bold(`
 
@@ -122,41 +57,16 @@ console.info('  ')
 console.info('  ')
 console.info('  ')
 
-proxy.listen(parseInt(config.ProxyPort), function() {
+cluster.listen(function() {
   console.info(colors.bold('  Your proxy frontend is available at the following URL(s):'));
   console.info('  ');
   console.info(`      https://${config.Hostname}:${config.ProxyPort}`);
   console.info(`      https://*.${config.Hostname}:${config.ProxyPort}`);
   console.info('  ');
-});
-server.listen(parseInt(config.TunnelPort), function() {
   console.log(colors.bold(`   Your tunnel backend is available at the following URL(s):`));
   console.info('  ');
   console.info(`      https://${config.Hostname}:${config.TunnelPort}`);
   console.info('  ');
 });
 
-// NB: We do a heartbeat every minute
-setInterval(() => {
-  async.eachLimit([...server._proxies], 6, ([id, proxy], done) => {
-    if (proxy._connectedSockets.length === 0) {
-      logger.info('proxy %s has no connected sockets, destroying...', id);
-      server._proxies.delete(id);
-      return done();
-    }
 
-    const url = `https://${id}.${config.Hostname}:${config.ProxyPort}`;
-
-    logger.info('sending heartbeat to %s (%s)', id, url);
-    https.request({
-      host: `${id}.${config.Hostname}`,
-      port: parseInt(config.ProxyPort),
-      headers: {
-        'User-Agent': 'Diglet Heartbeat'
-      }
-    }, (res) => {
-      res.resume();
-      done();
-    }).on('error', () => null);
-  });
-}, 60000);

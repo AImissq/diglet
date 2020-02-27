@@ -42,6 +42,7 @@
   "dependencies": {
     "async": "^2.6.1",
     "bunyan": "^1.8.5",
+    "camel-case": "^4.1.1",
     "colors": "^1.4.0",
     "commander": "^2.9.0",
     "merge": "^1.2.1",
