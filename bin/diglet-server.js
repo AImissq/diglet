@@ -2,14 +2,13 @@
 
 'use strict';
 
-const cluster = require('cluster');
 const { camelCase } = require('camel-case');
 const colors = require('colors/safe');
 const pkg = require('../package');
 const fs = require('fs');
 const async = require('async');
 const https = require('https');
-const diglet = require('..');
+const Diglet = require('..');
 const path = require('path');
 const bunyan = require('bunyan');
 const config = require('./_config');
@@ -20,7 +19,6 @@ const cpus = require('os').cpus().length;
 
 program
   .version(require('../package').version)
-  .option('-w, --workers <n>', 'number of worker processes to spawn', cpus)
   .option('-d, --debug', 'show verbose logs')
   .parse(process.argv);
 
@@ -42,33 +40,27 @@ for (let prop in config) {
   options[camelCase(prop)] = config[prop];
 }
 
-const app = new diglet.Cluster(parseInt(program.workers), {
+const app = new Diglet({
   logger,
   ...options
 });
 
-if (cluster.isMaster) {
-  console.info(colors.bold(`
+console.info(colors.bold(`
 
-     ____  _     _     _
-    |    \\|_|___| |___| |_
-    |  |  | | . | | -_|  _|
-    |____/|_|_  |_|___|_|
-            |___|
+   ____  _     _     _
+  |    \\|_|___| |___| |_
+  |  |  | | . | | -_|  _|
+  |____/|_|_  |_|___|_|
+          |___|
 
-  `));
-  console.info(colors.italic('   Copyright (c) 2019 Dead Canaries, Inc.'));
-  console.info(colors.italic('   Licensed under the GNU Affero General Public License Version 3'));
-  console.info('  ')
-  console.info('  ')
-  console.info('  ')
-}
+`));
+console.info(colors.italic('   Copyright (c) 2019 Dead Canaries, Inc.'));
+console.info(colors.italic('   Licensed under the GNU Affero General Public License Version 3'));
+console.info('  ')
+console.info('  ')
+console.info('  ')
 
 app.listen(function() {
-  if (!cluster.isMaster) {
-    return;
-  }
-
   console.info(colors.bold('  Your proxy frontend is available at the following URL(s):'));
   console.info('  ');
   console.info(`      https://${config.Hostname}:${config.ProxyPort}`);

@@ -1,7 +1,9 @@
 'use strict';
 
-/** {@link Cluster} */
-module.exports.Cluster = require('./lib/cluster');
+module.exports = require('./lib/diglet');
+
+/** {@link Diglet} */
+module.exports.Diglet = require('./lib/diglet');
 
 /** {@link Server} */
 module.exports.Server = require('./lib/server');

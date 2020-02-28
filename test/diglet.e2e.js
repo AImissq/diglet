@@ -1,8 +1,7 @@
 'use strict';
 
-const cluster = require('cluster');
 const async = require('async');
-const { Cluster, Server, Tunnel } = require('..');
+const { Diglet, Server, Tunnel } = require('..');
 const { expect } = require('chai');
 const pem = require('pem');
 const http = require('http');
@@ -11,11 +10,10 @@ const ws = require('ws');
 const { randomBytes, createHash } = require('crypto');
 const { publicKeyCreate } = require('secp256k1');
 const logger = require('bunyan').createLogger({ name: '_', level: 'fatal' });
-const cpus = require('os').cpus().length;
 
 describe('@class Server + @Tunnel (end-to-end)', function() {
 
-  let scluster, privkey, id, local, wss, tunnel;
+  let diglet, privkey, id, local, wss, tunnel;
 
   before(function(done) {
     privkey = randomBytes(32);
@@ -26,15 +24,11 @@ describe('@class Server + @Tunnel (end-to-end)', function() {
     async.series([
       // Create the diglet server
       function(next) {
-        if (!cluster.isMaster) {
-          return next();
-        }
-
         pem.createCertificate({
           days: 1,
           selfSigned: true
         }, function (err, keys) {
-          scluster = new Cluster(cpus, {
+          diglet = new Diglet({
             proxyPort: 9443,
             redirectPort: 9080,
             tunnelPort: 9444,
@@ -42,15 +36,11 @@ describe('@class Server + @Tunnel (end-to-end)', function() {
             serviceKey: keys.serviceKey
           });
 
-          scluster.listen(next);
+          diglet.listen(next);
         });
       },
       // Create the local server(s)
       function(next) {
-        if (!cluster.isMaster) {
-          return next();
-        }
-
         local = http.createServer(function(req, res) {
           res.writeHead(200);
           res.write('hello diglet');
@@ -68,10 +58,6 @@ describe('@class Server + @Tunnel (end-to-end)', function() {
       },
       // Create the tunnel connection
       function(next) {
-        if (!cluster.isMaster) {
-          return next();
-        }
-
         tunnel = new Tunnel({
           localAddress: '127.0.0.1',
           localPort: 9090,
@@ -86,62 +72,61 @@ describe('@class Server + @Tunnel (end-to-end)', function() {
     ], done);
   });
 
-  if (cluster.isMaster) {
-    it('should get the proxy info', function(done) {
-      tunnel.queryProxyInfoFromServer({
+  it('should get the proxy info', function(done) {
+    tunnel.queryProxyInfoFromServer({
+      port: 9443,
+      rejectUnauthorized: false
+    }).then(info => {
+      expect(!!info.alias).to.equal(true);
+      next();
+    }, next);
+  });
+
+  it('should reverse tunnel the http requests (1000x)', function(done) {
+    this.timeout(0);
+    async.timesLimit(1000, 10, function(i, next) {
+      https.get({
+        host: '127.0.0.1',
         port: 9443,
+        path: '/',
         rejectUnauthorized: false
-      }).then(info => {
-        expect(!!info.alias).to.equal(true);
-        next();
-      }, next);
-    });
-
-    it('should reverse tunnel the http requests (1000x)', function(done) {
-      this.timeout(0);
-      async.timesLimit(1000, 10, function(i, next) {
-        https.get({
-          host: '127.0.0.1',
-          port: 9443,
-          path: '/',
-          rejectUnauthorized: false
-        }, function(res) {
-          let body = '';
-          res.on('data', function(data) {
-            body += data.toString()
-          });
-          res.on('end', function() {
-            expect(body).to.equal('hello diglet');
-            expect(res.statusCode).to.equal(200);
-            expect(typeof res.headers['strict-transport-security'])
-              .to.equal('string');
-            next();
-          });
+      }, function(res) {
+        let body = '';
+        res.on('data', function(data) {
+          body += data.toString()
         });
-      }, done);
-    });
-
-    it('should reverse tunnel the websocket connection (1000x)', function(done) {
-      this.timeout(0);
-      async.timesLimit(1000, 10, function(i, next) {
-        const sock = new ws('wss://127.0.0.1:9443', {
-          rejectUnauthorized: false
-        });
-        sock.on('open', function() {
-          sock.send(`hello diglet ${i}`);
-        });
-        sock.on('message', function(data) {
-          expect(data.toString()).to.equal(`hello diglet ${i}`);
-          sock.close();
+        res.on('end', function() {
+          expect(body).to.equal('hello diglet');
+          expect(res.statusCode).to.equal(200);
+          expect(typeof res.headers['strict-transport-security'])
+            .to.equal('string');
           next();
         });
-      }, done);
-    });
+      });
+    }, done);
+  });
 
-    after(function(done) {
-      scluster.close();
-      done();
-    });
-  }
+  it('should reverse tunnel the websocket connection (1000x)', function(done) {
+    this.timeout(0);
+    async.timesLimit(1000, 10, function(i, next) {
+      const sock = new ws('wss://127.0.0.1:9443', {
+        rejectUnauthorized: false
+      });
+      sock.on('open', function() {
+        sock.send(`hello diglet ${i}`);
+      });
+      sock.on('message', function(data) {
+        expect(data.toString()).to.equal(`hello diglet ${i}`);
+        sock.close();
+        next();
+      });
+    }, done);
+  });
+
+  after(function(done) {
+    diglet.close();
+    local.close();
+    done();
+  });
 
 });
