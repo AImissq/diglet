@@ -29,11 +29,14 @@ describe('@class Server + @Tunnel (end-to-end)', function() {
           selfSigned: true
         }, function (err, keys) {
           diglet = new Diglet({
+            logger,
+            hostname: '127.0.0.1',
             proxyPort: 9443,
             redirectPort: 9080,
             tunnelPort: 9444,
-            serverSSLCertificate: keys.certificate,
-            serviceKey: keys.serviceKey
+            serverSslCertificate: keys.certificate,
+            serverPrivateKey: keys.serviceKey,
+            getAliasById: () => '127', // NB: domain hack for local testing
           });
 
           diglet.listen(next);
@@ -59,9 +62,9 @@ describe('@class Server + @Tunnel (end-to-end)', function() {
       // Create the tunnel connection
       function(next) {
         tunnel = new Tunnel({
-          localAddress: '127.0.0.1',
+          localAddress: 'localhost',
           localPort: 9090,
-          remoteAddress: '127.0.0.1',
+          remoteAddress: 'localhost',
           remotePort: 9444,
           privateKey: privkey,
           logger,
@@ -78,8 +81,8 @@ describe('@class Server + @Tunnel (end-to-end)', function() {
       rejectUnauthorized: false
     }).then(info => {
       expect(!!info.alias).to.equal(true);
-      next();
-    }, next);
+      done();
+    }, done);
   });
 
   it('should reverse tunnel the http requests (1000x)', function(done) {
@@ -120,6 +123,7 @@ describe('@class Server + @Tunnel (end-to-end)', function() {
         sock.close();
         next();
       });
+      sock.on('error', next);
     }, done);
   });
 
