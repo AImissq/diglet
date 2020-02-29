@@ -11,6 +11,7 @@ const config = require('./_config');
 const fs = require('fs');
 const { randomBytes } = require('crypto');
 const secp256k1 = require('secp256k1');
+const httpServer = require('http-server');
 const program = require('commander');
 const DEFAULT_KEY_PATH = path.join(os.homedir(), '.diglet.prv');
 
@@ -38,26 +39,8 @@ if (program.load && typeof program.load !== 'string') {
   program.load = DEFAULT_KEY_PATH;
 }
 
-if (program.www) {
-
-}
-
 function startLocalStaticServer() {
   return new Promise(function(resolve) {
-    if (program.https) {
-      console.error('\n  error: built-in local server does not support tls');
-      process.exit(1);
-    }
-
-    let httpServer;
-
-    try {
-      httpServer = require('http-server');
-    } catch (err) {
-      console.error('\n  error: optional http-server package not installed');
-      process.exit(1);
-    }
-
     const www = httpServer.createServer({
       root: typeof program.www === 'string'
         ? program.www
@@ -110,20 +93,10 @@ function getTunnel() {
   return tunnel;
 }
 
-console.info(colors.bold(`
-
-   ____  _     _     _
-  |    \\|_|___| |___| |_
-  |  |  | | . | | -_|  _|
-  |____/|_|_  |_|___|_|
-          |___|
-
-`));
-console.info(colors.italic('   Copyright (c) 2019 Dead Canaries, Inc.'));
-console.info(colors.italic('   Licensed under the GNU Affero General Public License Version 3'));
-console.info('  ')
-console.info('  ')
-console.info('  ')
+console.info(colors.bold(fs.readFileSync(
+  path.join(__dirname, '../logo.txt')).toString()));
+console.info(colors.italic(fs.readFileSync(
+  path.join(__dirname, '../copyright.txt')).toString()));
 
 const start = async function() {
   if (program.www) {

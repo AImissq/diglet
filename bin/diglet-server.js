@@ -45,20 +45,11 @@ const app = new Diglet({
   ...options
 });
 
-console.info(colors.bold(`
 
-   ____  _     _     _
-  |    \\|_|___| |___| |_
-  |  |  | | . | | -_|  _|
-  |____/|_|_  |_|___|_|
-          |___|
-
-`));
-console.info(colors.italic('   Copyright (c) 2019 Dead Canaries, Inc.'));
-console.info(colors.italic('   Licensed under the GNU Affero General Public License Version 3'));
-console.info('  ')
-console.info('  ')
-console.info('  ')
+console.info(colors.bold(fs.readFileSync(
+  path.join(__dirname, '../logo.txt')).toString()));
+console.info(colors.italic(fs.readFileSync(
+  path.join(__dirname, '../copyright.txt')).toString()));
 
 app.listen(function() {
   console.info(colors.bold('  Your proxy frontend is available at the following URL(s):'));
