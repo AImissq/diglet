@@ -1,0 +1,92 @@
+body {
+  margin: 0;
+  padding: 0;
+  border: 1px solid #989897;
+  border-radius: 8px 8px 0 0;
+  background: transparent;
+}
+
+button {
+  -webkit-app-region: no-drag;
+  outline: none;
+}
+
+button:active {
+  background: #CFCAC4 !important;
+}
+
+#app {
+  border-radius: 12px 12px 0 0;
+  background: transparent;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+section { 
+  background: #F6F5F4;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+header {
+  -webkit-app-region: drag;
+  background: linear-gradient(#E1DEDB, #DAD6D2);
+  border-top: 1px solid #F9F8F8;
+  border-bottom: 1px solid #BFB8B1;
+  padding: 6px;
+  overflow: hidden;
+  border-radius: 6px 6px 0 0;
+}
+
+button.action {
+  text-shadow: 0 1px 0 #fff;
+  background: #F2F0EF;
+  border: 1px solid #BFB8B1;
+  border-radius: 3px;
+  color: #2E3436;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+  padding: 8px 6px 4px 6px;
+  min-width: 36px;
+}
+
+button:hover {
+  background: #F0EEED;
+}
+
+button.window {
+  background: none;
+  border: none;
+  box-shadow: none;
+  border-radius: 24px;
+  text-shadow: 0 1px 0 #fff;
+  color: #2E3436;
+  padding: 5px 4px 3px 4px;
+  min-width: 28px;
+  font-size: 12px;
+  margin: 2px 2px 0 10px;
+  border: 1px solid transparent;
+}
+
+button.window:hover {
+  background: #F2F0EF;
+  border: 1px solid #BFB8B1;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.tunnel > ul {
+  list-style-type: none;
+  margin: 24px;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 6px;
+  border: 1px solid #BFB8B1;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+}
+

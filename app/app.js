@@ -92,14 +92,22 @@ const tunnel = Vue.component('tunnel', {
     this.init();
   },
   template: `
-    <div class="tunnel">
-      <ul v-if="!isShutdown">
-        <li><i class="fas fa-folder"></i> {{rootdir}}</li>
-        <li v-for="url in tunnelUrls"><i class="fas fa-link"></i> <a href="#" v-on:click="openLink(url)">{{url}}</a></li>
-        <li v-if="loading" class="loading"><i class="fas fa-link"></i> Establishing...</li>
-        <li class="success" v-if="!error && !loading"><i class="fas fa-check-circle"></i> Online</li>
-        <li class="error" v-if="error"><i class="fas fa-exclamation-circle"></i> Offline ({{error}})</li>
-        <li><button v-on:click="shutdown"><i class="fas fa-window-close"></i> Shutdown</button></li>
+    <div class="tunnel" v-if="!isShutdown">
+      <ul>
+        <li>
+          <img class="left status" src="assets/vendor/adwaita-scalable/status/network-error-symbolic.svg" v-if="error">
+          <img class="left status" src="assets/vendor/adwaita-scalable/status/network-no-route-symbolic.svg" v-if="!error && loading">
+          <img class="left status" src="assets/vendor/adwaita-scalable/status/network-transmit-receive-symbolic.svg" v-if="!error && !loading">
+        </li>
+        <li>
+          <ul>
+            <li><i class="fas fa-folder"></i> {{rootdir}}</li>
+            <li v-for="url in tunnelUrls"><i class="fas fa-link"></i> <a href="#" v-on:click="openLink(url)">{{url}}</a></li>
+          </ul>
+        </li>
+        <li class="right">
+          <button class="action right" v-on:click="shutdown"><img src="assets/vendor/adwaita-scalable/actions/edit-delete-symbolic.svg"></button>
+        </li>
       </ul>
     </div>
   `
@@ -108,7 +116,17 @@ const tunnel = Vue.component('tunnel', {
 const diglet = new Vue({
   el: '#app',
   data: {
-    tunnels: []
+    tunnels: [
+      {
+        rootdir: '/home/em/Public',
+      },
+      {
+        rootdir: '/home/em/Public',
+      },
+      {
+        rootdir: '/home/em/Public',
+      },
+    ]
   },
   methods: {
     addFiles: function() {
@@ -121,6 +139,27 @@ const diglet = new Vue({
           this.tunnels.push({ rootdir: result.filePaths.join(',') });
         }
       });
+    },
+    closeWindow: function() {
+      const win = remote.getCurrentWindow();
+
+      if (!this.tunnels.length) {
+        win.close();
+      } else if (confirm('Shutdown active tunnels?')) {
+        win.close();
+      }
+    },
+    maxWindow: function() {
+      const win = remote.getCurrentWindow();
+      if (!win.isMaximized()) {
+        win.maximize();
+      } else {
+        win.unmaximize();
+      }
+    },
+    minWindow: function() {
+      const win = remote.getCurrentWindow();
+      win.minimize();
     }
   },
   mounted: function() {

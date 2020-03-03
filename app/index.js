@@ -9,16 +9,19 @@ let win;
 
 function createWindow() {
   win = new BrowserWindow({
-    width: 600,
-    minWidth: 600,
-    maxWidth: 600,
-    height: 600,
-    minHeight: 600,
+    width: 466,
+    minWidth: 466,
+    maxWidth: 466,
+    height: 466,
+    minHeight: 466,
+    maxHeight: 466,
     show: false,
     icon: path.join(__dirname, 'assets/img/logo-app-icon.png'),
     webPreferences: {
       nodeIntegration: true
-    }
+    },
+    transparent: true,
+    frame: false
   });
 
   win.toggleDevTools()
@@ -28,6 +31,6 @@ function createWindow() {
   win.once('ready-to-show', () => win.show());
 };
 
-app.on('ready', () => createWindow());
+app.on('ready', () => setTimeout(createWindow, 400));
 app.on('window-all-closed', () => app.quit());
 

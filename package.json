@@ -9,7 +9,7 @@
     "diglet-tunnel": "bin/diglet-tunnel.js"
   },
   "scripts": {
-    "start-app": "electron-forge start",
+    "start-app": "electron-forge start -- --enable-transparent-visuals --disable-gpu",
     "release-app": "electron-forge package",
     "make-app": "electron-forge make",
     "test": "mocha --exit",
