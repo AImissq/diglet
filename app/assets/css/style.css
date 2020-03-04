@@ -33,6 +33,7 @@ button:active {
   top: 47px;
   width: 463px;
   max-height: 434px;
+  min-height: 137px;
   z-index: -1;
   overflow: auto;
   border: 1px solid #F6F5F4;
@@ -120,5 +121,33 @@ button.window:hover {
   border-radius: 6px;
   border: 1px solid #BFB8B1;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
+.status-icon {
+  overflow: hidden;
+  float: left;
+  margin-right: 12px;
+}
+
+.status-icon img {
+  width: 36px;
+  height: 36px;
+}
+
+.tunnel ul li ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tunnel ul li ul li {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tunnel-info {
+  float: left;
+  width: 266px;
+}

@@ -94,15 +94,16 @@ const tunnel = Vue.component('tunnel', {
   template: `
     <div class="tunnel" v-if="!isShutdown">
       <ul>
-        <li>
+        <li class="status-icon">
           <img class="left status" src="assets/vendor/adwaita-scalable/status/network-error-symbolic.svg" v-if="error">
           <img class="left status" src="assets/vendor/adwaita-scalable/status/network-no-route-symbolic.svg" v-if="!error && loading">
           <img class="left status" src="assets/vendor/adwaita-scalable/status/network-transmit-receive-symbolic.svg" v-if="!error && !loading">
         </li>
-        <li>
+        <li class="tunnel-info">
           <ul>
             <li><i class="fas fa-folder"></i> {{rootdir}}</li>
-            <li v-for="url in tunnelUrls"><i class="fas fa-link"></i> <a href="#" v-on:click="openLink(url)">{{url}}</a></li>
+            <!--<li v-for="url in tunnelUrls"><i class="fas fa-link"></i> <a href="#" v-on:click="openLink(url)">{{url}}</a></li>-->
+            <li><i class="fas fa-link"></i> <a href="#" v-on:click="openLink(tunnelUrls[tunnelUrls.length - 1])">{{tunnelUrls[tunnelUrls.length - 1]}}</a></li>
           </ul>
         </li>
         <li class="right">
@@ -143,7 +144,7 @@ const diglet = new Vue({
     closeWindow: function() {
       const win = remote.getCurrentWindow();
 
-      if (!this.tunnels.length) {
+      if (!this.tunnels.filter(t => t.isShutdown).length) {
         win.close();
       } else if (confirm('Shutdown active tunnels?')) {
         win.close();
