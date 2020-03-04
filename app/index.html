@@ -8,15 +8,19 @@
   </head>
   <body>
     <div id="app">
-      <header>
-        <button class="left action" v-on:click="addFiles"><img src="assets/vendor/adwaita-scalable/actions/list-add-symbolic.svg"></button>
-        <button class="right window" v-on:click="closeWindow"><img src="assets/vendor/adwaita-scalable/ui/window-close-symbolic.svg"></button>
-        <button class="right window" v-on:click="maxWindow"><img src="assets/vendor/adwaita-scalable/ui/window-maximize-symbolic.svg"></button>
-        <button class="right window" v-on:click="minWindow"><img src="assets/vendor/adwaita-scalable/ui/window-minimize-symbolic.svg"></button>
-      </header>
-      <section>
-        <tunnel v-for="tunnel in tunnels" v-bind:rootdir="tunnel.rootdir"></tunnel>
-      </section>
+      <div id="header">
+        <header>
+          <button class="left action" v-on:click="addFiles"><img src="assets/vendor/adwaita-scalable/actions/list-add-symbolic.svg"></button>
+          <button class="right window" v-on:click="closeWindow"><img src="assets/vendor/adwaita-scalable/ui/window-close-symbolic.svg"></button>
+          <!--<button class="right window" v-on:click="maxWindow"><img src="assets/vendor/adwaita-scalable/ui/window-maximize-symbolic.svg"></button>-->
+          <button class="right window" v-on:click="minWindow"><img src="assets/vendor/adwaita-scalable/ui/window-minimize-symbolic.svg"></button>
+        </header>
+      </div>
+      <div id="viewport">
+        <section>
+          <tunnel v-for="tunnel in tunnels" v-bind:rootdir="tunnel.rootdir"></tunnel>
+        </section>
+      </div>
     </div>
     <script type="text/javascript" src="app.js"></script>
   </body>

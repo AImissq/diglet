@@ -28,11 +28,43 @@ button:active {
   float: right;
 }
 
+#viewport {
+  position: fixed;
+  top: 47px;
+  width: 463px;
+  max-height: 434px;
+  z-index: -1;
+  overflow: auto;
+  border: 1px solid #F6F5F4;
+}
+
+#viewport::-webkit-scrollbar {
+  width: 4px;
+  border: 2px solid #F6F5F4;
+  background: #F6F5F4;
+}
+
+#viewport::-webkit-scrollbar:hover {
+  width: 8px;
+  background: #989897;
+}
+
+#viewport::-webkit-scrollbar-thumb {
+  border-radius: 100px;
+  background: rgba(0, 0, 0, 0.3);
+}
+
 section { 
   background: #F6F5F4;
   margin: 0;
   padding: 0;
   overflow: hidden;
+}
+
+#header {
+  width: 100%;
+  position: fixed;
+  top: 0;
 }
 
 header {
