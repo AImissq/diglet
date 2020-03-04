@@ -7,15 +7,15 @@
     <link rel="stylesheet" href="assets/css/style.css">
   </head>
   <body>
-    <div id="app">
+    <div id="app" v-on:click="clickOutsidePrompt">
       <div id="header">
         <header>
           <button class="left action" v-on:click="addFiles"><img src="assets/vendor/adwaita-scalable/actions/folder-new-symbolic.svg"></button>
-          <button class="left action" v-bind:class="{ active: showPortField }" v-on:click="togglePortPrompt"><img src="assets/vendor/adwaita-scalable/apps/preferences-system-network-symbolic.svg"></button>
-          <div class="button-menu" id="port-menu" v-if="showPortField">
-            <form v-on:submit.prevent="addService">
-              <input type="number" required placeholder="Enter port..." v-bind:value="portFieldValue" />
-              <input type="submit" value="Establish tunnel" />
+          <button class="left action _prompt" v-bind:class="{ active: showPortField }" v-on:click="togglePortPrompt"><img src="assets/vendor/adwaita-scalable/apps/preferences-system-network-symbolic.svg" class="_prompt"></button>
+          <div class="button-menu _prompt" id="port-menu" v-if="showPortField">
+            <form class="_prompt" v-on:submit.prevent="addService">
+              <input class="_prompt" ref="port" type="number" required placeholder="Enter port..." min="1" max="65535" v-model="portFieldValue" />
+              <input class="_prompt" type="submit" value="Establish tunnel" />
             </form>
           </div>
           <h1>Diglet (BETA)</h1>
@@ -28,9 +28,10 @@
         <section>
           <p class="help" v-if="!tunnels.length">
           <strong><img src="assets/vendor/adwaita-scalable/actions/folder-new-symbolic.svg"> Tunnel a folder<br/></strong>
-            <em>A tunnel is a public internet link to a folder on your computer.</em>
+          <strong><img src="assets/vendor/adwaita-scalable/apps/preferences-system-network-symbolic.svg"> Tunnel a local server<br/></strong>
+            <em>A tunnel is a public internet link to a resource on your computer.</em>
           </p>
-          <tunnel v-for="tunnel in tunnels" v-bind:rootdir="tunnel.rootdir"></tunnel>
+          <tunnel v-for="tunnel in tunnels" v-bind:local-server-port="tunnel.localServerPort" v-bind:rootdir="tunnel.rootdir"></tunnel>
         </section>
       </div>
     </div>

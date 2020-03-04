@@ -33,15 +33,37 @@ const diglet = new Vue({
     },
     togglePortPrompt: function() {
       this.showPortField = !this.showPortField;
+      setTimeout(() => {
+        if (this.$refs.port) {
+          this.$refs.port.focus();
+        }
+      }, 10);
+    },
+    clickOutsidePrompt: function(e) {
+      if (this.showPortField) {
+        if (e.target.className.includes('_prompt')) {
+          e.stopPropagation();
+        } else {
+          this.togglePortPrompt();
+        }
+      }
     },
     addService: function() {
-      this.showPortField = false;
+      const win = remote.getCurrentWindow();
+      const port = parseInt(this.portFieldValue);
 
       if (port && !Number.isNaN(port) && Number.isFinite(port) && port > 0) {
-
+        this.tunnels.push({ localServerPort: port });
       } else {
-        dialog.showErrorBox('Error', `The port ${port} is not valid, try again.`);
+        dialog.showMessageBox(win, {
+          type: 'error',
+          message: `The port ${port} is not valid, try again.`,
+          buttons: ['Dismiss']
+        });
       }
+
+      this.showPortField = false;
+      this.portFieldValue = '';
     },
     closeWindow: function() {
       const win = remote.getCurrentWindow();
@@ -98,12 +120,15 @@ const tunnel = Vue.component('tunnel', {
   },
   methods: {
     setupWebServer: function(cb) {
+      if (!this.rootdir) {
+        return cb(); // NB: Tunnel was created with a port
+      }
+
       this.server = httpServer.createServer({
         root: this.rootdir
       });
 
       this.server.listen(0, () => {
-        this.localServerPort = this.server.server.address().port;
         cb && cb();
       });
     },
@@ -112,7 +137,7 @@ const tunnel = Vue.component('tunnel', {
       this.logger = bunyan.createLogger({ name: 'digletapp' });
       this.tunnel = new Tunnel({
         localAddress: '127.0.0.1',
-        localPort: this.localServerPort,
+        localPort: this.localPortTarget,
         remoteAddress: config.Hostname,
         remotePort: parseInt(config.TunnelPort),
         logger: this.logger,
@@ -129,10 +154,7 @@ const tunnel = Vue.component('tunnel', {
           .catch(cb);
       });
 
-      this.tunnel.once('error', e => {
-        this.error = e.message;
-      });
-
+      this.tunnel.once('error', cb);
       this.tunnel.open();
     },
     init: function() {
@@ -159,9 +181,12 @@ const tunnel = Vue.component('tunnel', {
         buttons: ['Cancel', 'Terminate']
       }).then(({ response }) => {
         if (response === 1) {
-          this.server.server.close();
+          if (this.server) {
+            this.server.server.close();
+          }
           this.tunnel.close();
           this.isShutdown = true;
+          this.loading = false;
         }
       })
     }
@@ -179,6 +204,15 @@ const tunnel = Vue.component('tunnel', {
   mounted: function() {
     this.init();
   },
+  computed: {
+    localPortTarget: function() {
+      if (this.server) {
+        return this.server.server.address().port;
+      } else {
+        return this.localServerPort;
+      }
+    }
+  },
   template: `
     <div class="tunnel">
       <ul>
@@ -189,7 +223,8 @@ const tunnel = Vue.component('tunnel', {
         </li>
         <li class="tunnel-info">
           <ul>
-            <li><i class="fas fa-folder"></i> {{rootdir}}</li>
+            <li v-if="rootdir"><i class="fas fa-folder"></i> {{rootdir}}</li>
+            <li v-if="!rootdir && localServerPort"><i class="fas fa-desktop"></i> localhost:{{localServerPort}}</li>
             <li v-if="!isShutdown"><i class="fas fa-link"></i> <a href="#" v-on:click="openLink(tunnelUrls[tunnelUrls.length - 1])">{{tunnelUrls[tunnelUrls.length - 1]}}</a></li>
             <li v-if="isShutdown"><span class="error">{{error || 'Terminated by user'}}</span></li>
           </ul>

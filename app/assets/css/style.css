@@ -44,7 +44,7 @@ button:active, button.active {
   position: fixed;
   top: 47px;
   width: 463px;
-  min-height: 137px;
+  min-height: 417px;
   max-height: 417px;
   z-index: -1;
   overflow: auto;
@@ -201,10 +201,10 @@ header input[type="number"] {
   -webkit-app-region: no-drag;
   position: absolute;
   background: #F6F5F4;
-  border: 1px solid #DDDDDC;
+  border: 1px solid #CDC7C2;
   padding: 12px;
   border-radius: 8px;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 #port-menu {
