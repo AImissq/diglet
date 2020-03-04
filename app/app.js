@@ -12,6 +12,58 @@ const { Tunnel } = require('../lib');
 const Vue = require('vue/dist/vue');
 
 
+const diglet = new Vue({
+  el: '#app',
+  data: {
+    tunnels: [],
+  },
+  methods: {
+    addFiles: function() {
+      remote.dialog.showOpenDialog({
+        title: 'Select Directory',
+        buttonLabel: 'Establish Tunnel',
+        properties: ['openDirectory']
+      }).then(result => {
+        if (result.filePaths.length) {
+          this.tunnels.push({ rootdir: result.filePaths.join(',') });
+        }
+      });
+    },
+    closeWindow: function() {
+      const win = remote.getCurrentWindow();
+
+      if (!this.tunnels.length) {
+        win.close();
+      } else if (confirm('Are you sure you want to terminate any active tunnels?')) {
+        win.close();
+      }
+    },
+    maxWindow: function() {
+      const win = remote.getCurrentWindow();
+      if (!win.isMaximized()) {
+        win.maximize();
+      } else {
+        win.unmaximize();
+      }
+    },
+    minWindow: function() {
+      const win = remote.getCurrentWindow();
+      win.minimize();
+    }
+  },
+  mounted: function() {
+    document.addEventListener('drop', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    });
+    document.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+  }
+});
+
 const tunnel = Vue.component('tunnel', {
   data: function() {
     return {
@@ -77,6 +129,9 @@ const tunnel = Vue.component('tunnel', {
       shell.openExternal(url);
     },
     shutdown: function() {
+      if (!confirm('Terminate this tunnel?')) {
+        return;
+      }
       this.server.server.close();
       this.tunnel.close();
       this.isShutdown = true;
@@ -92,86 +147,24 @@ const tunnel = Vue.component('tunnel', {
     this.init();
   },
   template: `
-    <div class="tunnel" v-if="!isShutdown">
+    <div class="tunnel">
       <ul>
         <li class="status-icon">
-          <img class="left status" src="assets/vendor/adwaita-scalable/status/network-error-symbolic.svg" v-if="error">
+          <img class="left status" src="assets/vendor/adwaita-scalable/status/network-error-symbolic.svg" v-if="error || isShutdown">
           <img class="left status" src="assets/vendor/adwaita-scalable/status/network-no-route-symbolic.svg" v-if="!error && loading">
-          <img class="left status" src="assets/vendor/adwaita-scalable/status/network-transmit-receive-symbolic.svg" v-if="!error && !loading">
+          <img class="left status" src="assets/vendor/adwaita-scalable/status/network-transmit-receive-symbolic.svg" v-if="!error && !loading && !isShutdown">
         </li>
         <li class="tunnel-info">
           <ul>
             <li><i class="fas fa-folder"></i> {{rootdir}}</li>
-            <!--<li v-for="url in tunnelUrls"><i class="fas fa-link"></i> <a href="#" v-on:click="openLink(url)">{{url}}</a></li>-->
-            <li><i class="fas fa-link"></i> <a href="#" v-on:click="openLink(tunnelUrls[tunnelUrls.length - 1])">{{tunnelUrls[tunnelUrls.length - 1]}}</a></li>
+            <li v-if="!isShutdown"><i class="fas fa-link"></i> <a href="#" v-on:click="openLink(tunnelUrls[tunnelUrls.length - 1])">{{tunnelUrls[tunnelUrls.length - 1]}}</a></li>
+            <li v-if="isShutdown"><span class="error">{{error || 'Terminated by user'}}</span></li>
           </ul>
         </li>
-        <li class="right">
+        <li class="right" v-if="!isShutdown">
           <button class="action right" v-on:click="shutdown"><img src="assets/vendor/adwaita-scalable/actions/edit-delete-symbolic.svg"></button>
         </li>
       </ul>
     </div>
   `
-});
-
-const diglet = new Vue({
-  el: '#app',
-  data: {
-    tunnels: [
-      {
-        rootdir: '/home/em/Public',
-      },
-      {
-        rootdir: '/home/em/Public',
-      },
-      {
-        rootdir: '/home/em/Public',
-      },
-    ]
-  },
-  methods: {
-    addFiles: function() {
-      remote.dialog.showOpenDialog({
-        title: 'Select Directory',
-        buttonLabel: 'Establish Tunnel',
-        properties: ['openDirectory']
-      }).then(result => {
-        if (result.filePaths.length) {
-          this.tunnels.push({ rootdir: result.filePaths.join(',') });
-        }
-      });
-    },
-    closeWindow: function() {
-      const win = remote.getCurrentWindow();
-
-      if (!this.tunnels.filter(t => t.isShutdown).length) {
-        win.close();
-      } else if (confirm('Shutdown active tunnels?')) {
-        win.close();
-      }
-    },
-    maxWindow: function() {
-      const win = remote.getCurrentWindow();
-      if (!win.isMaximized()) {
-        win.maximize();
-      } else {
-        win.unmaximize();
-      }
-    },
-    minWindow: function() {
-      const win = remote.getCurrentWindow();
-      win.minimize();
-    }
-  },
-  mounted: function() {
-    document.addEventListener('drop', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      return false;
-    });
-    document.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-    });
-  }
 });

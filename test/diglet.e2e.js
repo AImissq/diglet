@@ -1,25 +1,21 @@
 'use strict';
 
 const async = require('async');
-const { Diglet, Server, Tunnel } = require('..');
+const { Diglet, Tunnel } = require('..');
 const { expect } = require('chai');
 const pem = require('pem');
 const http = require('http');
 const https = require('https');
 const ws = require('ws');
-const { randomBytes, createHash } = require('crypto');
-const { publicKeyCreate } = require('secp256k1');
+const { randomBytes } = require('crypto');
 const logger = require('bunyan').createLogger({ name: '_', level: 'fatal' });
 
 describe('@class Server + @Tunnel (end-to-end)', function() {
 
-  let diglet, privkey, id, local, wss, tunnel;
+  let diglet, privkey, local, wss, tunnel;
 
   before(function(done) {
     privkey = randomBytes(32);
-    id = createHash('rmd160').update(
-      createHash('sha256').update(publicKeyCreate(privkey)).digest()
-    ).digest('hex');
 
     async.series([
       // Create the diglet server

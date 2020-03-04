@@ -1,9 +1,20 @@
 body {
   margin: 0;
   padding: 0;
-  border: 1px solid #989897;
-  border-radius: 8px 8px 0 0;
   background: transparent;
+  font-family: 'Cantarell', sans-serif;
+  color: #2E3436;
+  font-size: 12px;
+}
+
+h1 {
+  text-align: center;
+  position: absolute;
+  width: 200px;
+  font-size: 13px;
+  z-index: 0;
+  left: 50%;
+  margin-left: -100px;
 }
 
 button {
@@ -29,14 +40,15 @@ button:active {
 }
 
 #viewport {
+  background: #F6F5F4;
   position: fixed;
   top: 47px;
   width: 463px;
-  max-height: 434px;
   min-height: 137px;
+  max-height: 417px;
   z-index: -1;
   overflow: auto;
-  border: 1px solid #F6F5F4;
+  border: 1px solid #989897;
 }
 
 #viewport::-webkit-scrollbar {
@@ -56,16 +68,18 @@ button:active {
 }
 
 section { 
-  background: #F6F5F4;
   margin: 0;
   padding: 0;
   overflow: hidden;
 }
 
 #header {
-  width: 100%;
+  width: 463px;
   position: fixed;
   top: 0;
+  border: 1px solid #989897;
+  border-bottom: none;
+  border-radius: 7px 7px 0 0;
 }
 
 header {
@@ -150,4 +164,14 @@ button.window:hover {
 .tunnel-info {
   float: left;
   width: 266px;
+}
+
+.help {
+  color: #929595;
+  margin: 48px auto;
+  width: 358px;
+}
+
+.error {
+  color: red;
 }
