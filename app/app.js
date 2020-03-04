@@ -16,6 +16,8 @@ const diglet = new Vue({
   el: '#app',
   data: {
     tunnels: [],
+    showPortField: false,
+    portFieldValue: ''
   },
   methods: {
     addFiles: function() {
@@ -29,13 +31,33 @@ const diglet = new Vue({
         }
       });
     },
+    togglePortPrompt: function() {
+      this.showPortField = !this.showPortField;
+    },
+    addService: function() {
+      this.showPortField = false;
+
+      if (port && !Number.isNaN(port) && Number.isFinite(port) && port > 0) {
+
+      } else {
+        dialog.showErrorBox('Error', `The port ${port} is not valid, try again.`);
+      }
+    },
     closeWindow: function() {
       const win = remote.getCurrentWindow();
 
       if (!this.tunnels.length) {
         win.close();
-      } else if (confirm('Are you sure you want to terminate any active tunnels?')) {
-        win.close();
+      } else {
+        dialog.showMessageBox(win, {
+          type: 'question',
+          message: 'Are you sure you want to terminate any active tunnels?',
+          buttons: ['Cancel', 'Terminate & Exit']
+        }).then(({ response }) => {
+          if (response === 1) {
+            win.close();
+          }
+        });
       }
     },
     maxWindow: function() {
@@ -72,7 +94,6 @@ const tunnel = Vue.component('tunnel', {
       tunnelEstablished: false,
       tunnelUrls: [],
       error: '',
-      localServerPort: 0,
     };
   },
   methods: {
@@ -129,18 +150,30 @@ const tunnel = Vue.component('tunnel', {
       shell.openExternal(url);
     },
     shutdown: function() {
-      if (!confirm('Terminate this tunnel?')) {
-        return;
-      }
-      this.server.server.close();
-      this.tunnel.close();
-      this.isShutdown = true;
+      const win = remote.getCurrentWindow();
+      const name = this.rootdir || `localhost:${this.localServerPort}`;
+
+      dialog.showMessageBox(win, {
+        type: 'question',
+        message: `Terminate the tunnel for ${name}?`,
+        buttons: ['Cancel', 'Terminate']
+      }).then(({ response }) => {
+        if (response === 1) {
+          this.server.server.close();
+          this.tunnel.close();
+          this.isShutdown = true;
+        }
+      })
     }
   },
   props: {
     rootdir: {
       type: String,
       default: ''
+    },
+    localServerPort: {
+      type: Number,
+      default: 0
     }
   },
   mounted: function() {
@@ -162,7 +195,7 @@ const tunnel = Vue.component('tunnel', {
           </ul>
         </li>
         <li class="right" v-if="!isShutdown">
-          <button class="action right" v-on:click="shutdown"><img src="assets/vendor/adwaita-scalable/actions/edit-delete-symbolic.svg"></button>
+          <button class="action right" v-on:click="shutdown"><img src="assets/vendor/adwaita-scalable/actions/process-stop-symbolic.svg"></button>
         </li>
       </ul>
     </div>

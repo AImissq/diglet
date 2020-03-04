@@ -22,7 +22,7 @@ button {
   outline: none;
 }
 
-button:active {
+button:active, button.active {
   background: #CFCAC4 !important;
 }
 
@@ -103,6 +103,10 @@ button.action {
   min-width: 36px;
 }
 
+button.action.left {
+  margin-right: 6px;
+}
+
 button:hover {
   background: #F0EEED;
 }
@@ -172,6 +176,58 @@ button.window:hover {
   width: 358px;
 }
 
+.help img {
+  width: 12px;
+  height: 12px;
+  opacity: 0.6;
+  padding: 2px 6px 0 0;
+  float: left;
+}
+
 .error {
   color: red;
+}
+
+header input[type="number"] {
+  outline: #3584E4;
+  font-family: 'Cantarell', sans-serif;
+  padding: 6px;
+  border: 1px solid #CDC7C2;
+  border-radius: 4px;
+  width: 90px;
+}
+
+.button-menu {
+  -webkit-app-region: no-drag;
+  position: absolute;
+  background: #F6F5F4;
+  border: 1px solid #DDDDDC;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+}
+
+#port-menu {
+  top: 50px;
+  left: 48px;
+}
+
+input[type="submit"] {
+  background: linear-gradient(#3584E4, #1B6ACB);
+  color: #fff;
+  border-radius: 4px;
+  border: 1px solid #1B6ACB;
+  outline: none;
+  padding: 5px;
+  margin-left: 4px;
+  text-shadow: 0 -1px #000;
+  font-family: 'Cantarell';
+}
+
+input[type="submit"]:hover {
+  background: #3584E4;
+}
+
+input[type="submit"]:active {
+  background: #1B6ACB;
 }
