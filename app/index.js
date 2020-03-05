@@ -16,7 +16,7 @@ function createWindow() {
     minHeight: 466,
     maxHeight: 466,
     show: false,
-    icon: path.join(__dirname, 'assets/img/icon.svg'),
+    icon: path.join(__dirname, 'assets/img/icon.png'),
     webPreferences: {
       nodeIntegration: true
     },
