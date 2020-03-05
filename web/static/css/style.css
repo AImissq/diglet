@@ -52,14 +52,23 @@ section {
 
 .download {
   background: #f6f5f4;
-  color: #373748;
+  color: #2b2200;
   border-radius: 8px;
   padding: 24px;
   margin: 24px;
 }
 
-a {
+.download li {
+  display: inline-block;
+  margin: 12px 24px;
+}
 
+.download li a:hover {
+  color: #87cdde;
+}
+
+.download li i {
+  font-size: 86px;
 }
 
 ul {
@@ -73,13 +82,9 @@ ul {
   margin: 48px;
 }
 
-li i.fas {
+li i {
   display: block;
   font-size: 48px;
-}
-
-ul li a {
-
 }
 
 footer {
@@ -92,4 +97,25 @@ p {
 
 footer p {
 
+}
+
+.error img {
+  width: 256px;
+}
+
+.error p {
+  font-size: 22px;
+}
+
+.error p small {
+  font-size: 14px;
+}
+
+.container.error > div {
+  margin: 48px auto;
+  border-radius: 8px;
+  border: 1px solid #fff;
+  background: #f6f5f4;
+  color: #373748;
+  padding: 48px;
 }
