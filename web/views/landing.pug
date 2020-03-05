@@ -3,7 +3,29 @@ extends layout.pug
 block content
   header
     .container
+      img(src='/img/icon.svg')
+      h1 Diglet
+      h2 Secure public links to your computer!
   .container
+    section.about
+      h3 Features
+      ul
+        li Share a folder on your computer with friends
+        li Collaborate on web development projects in real-time
+        li Punch any HTTP(S) (+WebSockets) service through NATs and firewalls
+        li Test your code using cloud browsers
+    section.download
+      h3 Downloads
+      ul
+        li
+          a(href='#') MacOS 
+        li
+          a(href='#') Windows
+        li
+          a(href='#') Linux
+        li
+          a(href='https://gitlab.com/deadcanaries/diglet') Source Code
   footer
     .container
+      p Diglet is a project by #[a(href="https://deadcanaries.org") Dead Canaries] - &copy; 2020
   

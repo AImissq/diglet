@@ -1,0 +1,81 @@
+body {
+  font-family: 'Cantarell', sans-serif;
+  color: #222;
+  background: #f6f5f4;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  width: 676px;
+  margin: auto;
+  overflow: hidden;
+}
+
+header {
+  overflow: hidden;
+  border-bottom: 1px solid #fff;
+  background: #373748;
+}
+
+header img {
+  width: 128px;
+  float: left;
+  margin: 24px;
+}
+
+h1 {
+  float: left;
+  margin: 48px 0 0 0;
+  color: #fff;
+}
+
+h2 {
+  float: left;
+  margin: 0;
+  color: #fff;
+}
+
+h3 {
+
+}
+
+section {
+
+}
+
+.about {
+
+}
+
+.download {
+
+}
+
+a {
+
+}
+
+ul {
+
+}
+
+ul li {
+
+}
+
+ul li a {
+
+}
+
+footer {
+
+}
+
+p {
+
+}
+
+footer p {
+
+}
