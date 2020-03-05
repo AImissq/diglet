@@ -10,8 +10,8 @@
   },
   "scripts": {
     "start-app": "DEBUG=1 electron-forge start -- --enable-transparent-visuals --disable-gpu",
-    "release-app": "electron-forge package",
-    "make-app": "electron-forge make",
+    "make-app": "electron-forge package",
+    "release-app": "electron-forge make",
     "test": "mocha --exit",
     "linter": "eslint index.js lib test",
     "coverage": "istanbul cover _mocha -- --exit",
@@ -69,7 +69,8 @@
   "config": {
     "forge": {
       "packagerConfig": {
-        "icon": "app/assets/img/icon.icns"
+        "icon": "app/assets/img/icon.icns",
+        "name": "Diglet"
       },
       "makers": [
         {
@@ -97,7 +98,7 @@
             "maintainer": "Dead Canaries",
             "homepage": "https://gitlab.com/deadcanaries/diglet",
             "description": "Securely expose local web servers and files to the internet",
-            "icon": "app/assets/img/logo-app-icon.png",
+            "icon": "app/assets/img/icon.svg",
             "name": "diglet",
             "productName": "Diglet",
             "bin": "Diglet",
