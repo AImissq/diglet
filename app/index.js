@@ -16,7 +16,7 @@ function createWindow() {
     minHeight: 466,
     maxHeight: 466,
     show: false,
-    icon: path.join(__dirname, 'assets/img/logo-app-icon.png'),
+    icon: path.join(__dirname, 'assets/img/icon.png'),
     webPreferences: {
       nodeIntegration: true
     },
@@ -24,7 +24,10 @@ function createWindow() {
     frame: false
   });
 
-  win.toggleDevTools()
+  if (process.env.DEBUG) {
+    win.toggleDevTools();
+  }
+
   Menu.setApplicationMenu(null);
   win.loadURL(`file://${__dirname}/index.html`);
   win.on('closed', () => win = null);

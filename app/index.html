@@ -27,8 +27,9 @@
       <div id="viewport">
         <section>
           <p class="help" v-if="!tunnels.length">
-          <strong><img src="assets/vendor/adwaita-scalable/actions/folder-new-symbolic.svg"> Tunnel a folder<br/></strong>
-          <strong><img src="assets/vendor/adwaita-scalable/apps/preferences-system-network-symbolic.svg"> Tunnel a local server<br/></strong>
+            <img class="app-logo" src="assets/img/icon.svg"/ >
+            <strong><img src="assets/vendor/adwaita-scalable/actions/folder-new-symbolic.svg"> Tunnel a folder<br/></strong>
+            <strong><img src="assets/vendor/adwaita-scalable/apps/preferences-system-network-symbolic.svg"> Tunnel a local server<br/></strong>
             <em>A tunnel is a public internet link to a resource on your computer.</em>
           </p>
           <tunnel v-for="tunnel in tunnels" v-bind:local-server-port="tunnel.localServerPort" v-bind:rootdir="tunnel.rootdir"></tunnel>

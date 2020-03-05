@@ -176,7 +176,19 @@ button.window:hover {
   width: 358px;
 }
 
-.help img {
+.help strong {
+  display: block;
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+.app-logo {
+  width: 50%;
+  display: block;
+  margin: 48px auto;
+}
+
+.help strong img {
   width: 12px;
   height: 12px;
   opacity: 0.6;
