@@ -1,39 +1,41 @@
 body {
   font-family: 'Cantarell', sans-serif;
-  color: #222;
-  background: #f6f5f4;
+  background: #373748;
   margin: 0;
   padding: 0;
+  color: #f6f5f4;
 }
 
 .container {
-  width: 676px;
+  max-width: 676px;
   margin: auto;
   overflow: hidden;
+  text-align: center;
 }
 
 header {
   overflow: hidden;
   border-bottom: 1px solid #fff;
-  background: #373748;
+  background: #f6f5f4;
 }
 
 header img {
-  width: 128px;
-  float: left;
+  width: 200px;
   margin: 24px;
 }
 
 h1 {
-  float: left;
-  margin: 48px 0 0 0;
-  color: #fff;
+  margin: 12px;
+  color: #373748;
+  text-shadow: 0 2px 0 #fff;
+  text-align: center;
 }
 
 h2 {
-  float: left;
-  margin: 0;
-  color: #fff;
+  margin: 12px 0 24px 0;
+  color: #373748;
+  text-shadow: 0 2px 0 #fff;
+  text-align: center;
 }
 
 h3 {
@@ -49,7 +51,11 @@ section {
 }
 
 .download {
-
+  background: #f6f5f4;
+  color: #373748;
+  border-radius: 8px;
+  padding: 24px;
+  margin: 24px;
 }
 
 a {
@@ -57,11 +63,19 @@ a {
 }
 
 ul {
-
+  list-style-type: none;
+  font-size: 18px;
+  padding: 0;
+  margin: 24px;
 }
 
-ul li {
+.about ul li {
+  margin: 48px;
+}
 
+li i.fas {
+  display: block;
+  font-size: 48px;
 }
 
 ul li a {
