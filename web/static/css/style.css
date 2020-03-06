@@ -65,6 +65,10 @@ a:hover {
   font-size: 86px;
 }
 
+.download li a {
+  color: #2b2200;
+}
+
 ul {
   list-style-type: none;
   font-size: 18px;
@@ -113,6 +117,14 @@ li i {
   background: #f6f5f4;
   color: #373748;
   padding: 48px;
+}
+
+footer a {
+  color: #f6f5f4;
+}
+
+.error a {
+  color: #373748;
 }
 
 @media all and (max-width: 676px) {
