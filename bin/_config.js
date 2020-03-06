@@ -1,7 +1,7 @@
 'use strict';
 
 const config = require('rc')('diglet', {
-  Hostname: 'tunnel.deadcanaries.org',
+  Hostname: 'diglet.me',
   ProxyPort: 443,
   RedirectPort: 80,
   TunnelPort: 8443,

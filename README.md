@@ -43,7 +43,7 @@ Client Tunneling
 
 Once you have the `diglet` package installed, you can use it to establish a 
 reverse tunnel from a local HTTP(S) server to a diglet server on the internet.
-By default, diglet is configured to use a test server `tunnel.deadcanaries.org`. Don't
+By default, diglet is configured to use a test server `diglet.me`. Don't
 depend on it, but if it's online you can feel free to test with it. It is 
 recommended to run your own diglet server, which is described in detail in the 
 next section.
