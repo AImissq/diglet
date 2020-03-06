@@ -38,18 +38,6 @@ h2 {
   text-align: center;
 }
 
-h3 {
-
-}
-
-section {
-
-}
-
-.about {
-
-}
-
 .download {
   background: #f6f5f4;
   color: #2b2200;
@@ -63,7 +51,7 @@ section {
   margin: 12px 24px;
 }
 
-.download li a:hover {
+a:hover {
   color: #87cdde;
 }
 
@@ -76,27 +64,18 @@ ul {
   font-size: 18px;
   padding: 0;
   margin: 24px;
+  overflow: hidden;
 }
 
 .about ul li {
   margin: 48px;
+  float: left;
+  width: 212px;
 }
 
 li i {
   display: block;
   font-size: 48px;
-}
-
-footer {
-
-}
-
-p {
-
-}
-
-footer p {
-
 }
 
 .error img {
@@ -118,4 +97,11 @@ footer p {
   background: #f6f5f4;
   color: #373748;
   padding: 48px;
+}
+
+@media all and (max-width: 676px) {
+  .about ul li {
+    float: none;
+    width: auto;
+  }
 }
