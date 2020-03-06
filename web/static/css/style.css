@@ -55,6 +55,12 @@ a:hover {
   color: #87cdde;
 }
 
+.info {
+  text-align: left;
+  color: #2b2200;
+  font-size: 18px;
+}
+
 .download li i {
   font-size: 86px;
 }
