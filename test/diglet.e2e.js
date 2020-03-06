@@ -1,26 +1,21 @@
 'use strict';
 
 const async = require('async');
-const { Server, Tunnel } = require('..');
+const { Diglet, Tunnel } = require('..');
 const { expect } = require('chai');
 const pem = require('pem');
 const http = require('http');
 const https = require('https');
 const ws = require('ws');
-const { randomBytes, createHash } = require('crypto');
-const { publicKeyCreate } = require('secp256k1');
+const { randomBytes } = require('crypto');
 const logger = require('bunyan').createLogger({ name: '_', level: 'fatal' });
-
 
 describe('@class Server + @Tunnel (end-to-end)', function() {
 
-  let front, server, privkey, id, local, wss, tunnel;
+  let diglet, privkey, local, wss, tunnel;
 
   before(function(done) {
     privkey = randomBytes(32);
-    id = createHash('rmd160').update(
-      createHash('sha256').update(publicKeyCreate(privkey)).digest()
-    ).digest('hex');
 
     async.series([
       // Create the diglet server
@@ -29,27 +24,18 @@ describe('@class Server + @Tunnel (end-to-end)', function() {
           days: 1,
           selfSigned: true
         }, function (err, keys) {
-          server = new Server({
-            key: keys.serviceKey,
-            cert: keys.certificate,
-            logger
+          diglet = new Diglet({
+            logger,
+            hostname: '127.0.0.1',
+            proxyPort: 9443,
+            redirectPort: 9080,
+            tunnelPort: 9444,
+            serverSslCertificate: keys.certificate,
+            serverPrivateKey: keys.serviceKey,
+            getAliasById: () => '127', // NB: domain hack for local testing
           });
 
-          front = https.createServer({
-            key: keys.serviceKey,
-            cert: keys.certificate
-          });
-
-          front.on('request', function(request, response) {
-            server.routeHttpRequest(id, request, response, () => null);
-          });
-
-          front.on('upgrade', function(request, socket) {
-            server.routeWebSocketConnection(id, request, socket, () => null);
-          });
-
-          front.listen(9443);
-          server.listen(9444, next);
+          diglet.listen(next);
         });
       },
       // Create the local server(s)
@@ -72,22 +58,32 @@ describe('@class Server + @Tunnel (end-to-end)', function() {
       // Create the tunnel connection
       function(next) {
         tunnel = new Tunnel({
-          localAddress: '127.0.0.1',
+          localAddress: 'localhost',
           localPort: 9090,
-          remoteAddress: '127.0.0.1',
+          remoteAddress: 'localhost',
           remotePort: 9444,
           privateKey: privkey,
-          logger
+          logger,
         });
 
         tunnel.once('connected', next).open();
-      }
+      },
     ], done);
   });
 
-  it('should reverse tunnel the http requests (96x)', function(done) {
+  it('should get the proxy info', function(done) {
+    tunnel.queryProxyInfoFromServer({
+      port: 9443,
+      rejectUnauthorized: false
+    }).then(info => {
+      expect(!!info.alias).to.equal(true);
+      done();
+    }, done);
+  });
+
+  it('should reverse tunnel the http requests (1000x)', function(done) {
     this.timeout(0);
-    async.timesLimit(96, 6, function(i, next) {
+    async.timesLimit(1000, 10, function(i, next) {
       https.get({
         host: '127.0.0.1',
         port: 9443,
@@ -109,9 +105,9 @@ describe('@class Server + @Tunnel (end-to-end)', function() {
     }, done);
   });
 
-  it('should reverse tunnel the websocket connection (96x)', function(done) {
+  it('should reverse tunnel the websocket connection (1000x)', function(done) {
     this.timeout(0);
-    async.timesLimit(96, 6, function(i, next) {
+    async.timesLimit(1000, 10, function(i, next) {
       const sock = new ws('wss://127.0.0.1:9443', {
         rejectUnauthorized: false
       });
@@ -123,12 +119,12 @@ describe('@class Server + @Tunnel (end-to-end)', function() {
         sock.close();
         next();
       });
+      sock.on('error', next);
     }, done);
   });
 
   after(function(done) {
-    server._server.close();
-    front.close();
+    diglet.close();
     local.close();
     done();
   });

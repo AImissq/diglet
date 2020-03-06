@@ -1,3 +1,6 @@
+web/static/downloads/*
+!web/static/downloads/.gitkeep
+out
 dist
 
 # Logs

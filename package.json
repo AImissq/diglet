@@ -1,6 +1,6 @@
 {
   "name": "@deadcanaries/diglet",
-  "version": "2.0.6",
+  "version": "3.0.0-beta",
   "description": "fully encrypted reverse https tunnel",
   "main": "index.js",
   "bin": {
@@ -9,6 +9,9 @@
     "diglet-tunnel": "bin/diglet-tunnel.js"
   },
   "scripts": {
+    "start-app": "DEBUG=1 electron-forge start -- --enable-transparent-visuals --disable-gpu",
+    "make-app": "electron-forge package",
+    "release-app": "electron-forge make",
     "test": "mocha --exit",
     "linter": "eslint index.js lib test",
     "coverage": "istanbul cover _mocha -- --exit",
@@ -31,21 +34,81 @@
   },
   "homepage": "https://gitlab.com/deadcanaries/diglet#readme",
   "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.50",
+    "@electron-forge/maker-deb": "^6.0.0-beta.50",
+    "@electron-forge/maker-dmg": "^6.0.0-beta.50",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.50",
+    "@electron-forge/maker-zip": "^6.0.0-beta.50",
     "chai": "^4.1.2",
-    "eslint": "^5.16.0",
+    "electron": "^8.0.2",
+    "eslint": "^6.8.0",
     "istanbul": "^0.4.5",
     "mocha": "^5.2.0",
     "pem": "^1.14.2",
-    "pkg": "^4.3.3",
+    "pkg": "^4.4.3",
     "ws": "^5.2.2"
   },
   "dependencies": {
     "async": "^2.6.1",
     "bunyan": "^1.8.5",
+    "camel-case": "^4.1.1",
+    "colors": "^1.4.0",
     "commander": "^2.9.0",
+    "electron-squirrel-startup": "^1.0.0",
+    "express": "^4.17.1",
+    "http-server": "^0.12.1",
+    "is-electron": "^2.2.0",
     "merge": "^1.2.1",
+    "mkdirp": "^1.0.3",
+    "pug": "^2.0.4",
+    "random-word": "^2.0.0",
     "rc": "^1.1.6",
-    "secp256k1": "=3.2.2",
-    "tldjs": "^1.7.0"
+    "secp256k1": "^3.8.0",
+    "serve-static": "^1.14.1",
+    "tldjs": "^1.7.0",
+    "vue": "^2.6.11"
+  },
+  "optionalDependencies": {},
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "icon": "app/assets/img/icon.icns",
+        "name": "Diglet"
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "Diglet",
+            "setupIcon": "app/assets/img/icon.ico"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-dmg",
+          "platforms": [
+            "darwin"
+          ],
+          "config": {
+            "background": "",
+            "format": "ULFO",
+            "icon": "app/assets/img/icon.icns",
+            "overwrite": true
+          }
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {
+            "maintainer": "Dead Canaries",
+            "homepage": "https://gitlab.com/deadcanaries/diglet",
+            "description": "Securely expose local web servers and files to the internet",
+            "icon": "app/assets/img/icon.svg",
+            "name": "diglet",
+            "productName": "Diglet",
+            "bin": "Diglet",
+            "depends": []
+          }
+        }
+      ]
+    }
   }
 }

@@ -1,0 +1,5 @@
+   Copyright (c) 2019 Dead Canaries, Inc.
+   Licensed under the GNU Affero General Public License Version 3
+
+
+

@@ -1,13 +1,8 @@
 'use strict';
 
-/** {@link Server} */
-module.exports.Server = require('./lib/server');
+if (require('is-electron')()) {
+  require('./app');
+} else {
+  module.exports = require('./lib');
+}
 
-/** {@link Tunnel} */
-module.exports.Tunnel = require('./lib/tunnel');
-
-/** {@link Proxy} */
-module.exports.Proxy = require('./lib/proxy');
-
-/** {@link Handshake} */
-module.exports.Handshake = require('./lib/handshake');
