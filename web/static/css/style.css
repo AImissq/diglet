@@ -84,8 +84,17 @@ li i {
   font-size: 48px;
 }
 
+.info li i {
+  display: inline;
+  font-size: 18px;
+}
+
 .error img {
   width: 256px;
+}
+
+.info p {
+  color: #373748;
 }
 
 .error p {
